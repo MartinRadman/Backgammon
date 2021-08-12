@@ -166,8 +166,15 @@ public class Okno extends JFrame implements ActionListener{
 	       
 	        
 		    
-	    }
+	}
 	
+	public void osvezi_vmesnik() {
+		platno.repaint();
+	}
+	
+	public Platno platno() {
+		return platno;
+	}
 	
 	
 	}

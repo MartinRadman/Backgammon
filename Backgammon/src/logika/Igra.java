@@ -28,6 +28,10 @@ public class Igra {
 
 	}
 	
+	public enum Stanje {
+		ZMAGA1, ZMAGA2, V_TEKU
+	}
+	
 	public Igra(Igralec igralec1, Igralec igralec2) {
 		this.igralec1 = igralec1;
 		this.igralec2 = igralec2;
@@ -86,6 +90,12 @@ public class Igra {
 		polje[zacetek].odstrani();
 		polje[konec].dodaj(trenutni_igralec.id());
 		zamenjaj_igralca();
+	}
+	
+	public Stanje stanje() {
+		if (igralec1.izloceni_zetoni() == 15) return Stanje.ZMAGA1;
+		if (igralec2.izloceni_zetoni() == 15) return Stanje.ZMAGA2;
+		return Stanje.V_TEKU;
 	}
 	
 	public List<int[]> mozne_poteze(int premik, Zetoni[] opazovano_polje) {

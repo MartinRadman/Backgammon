@@ -5,17 +5,15 @@ import java.util.concurrent.TimeUnit;
 
 import javax.swing.SwingWorker;
 
-import inteligenca.Inteligenca;
 import logika.Igra;
-import logika.Igra.Igralec;
-import splosno.KdoIgra;
-import splosno.Koordinati;
-import vmesnik.Okno;
+import logika.Igralec;
+import logika.Zetoni.Polje;
+import Vmesnik.Okno;
+import inteligenca.MonteCarloTreeSearch;
 
 public class Vodja {	
 	
 	protected Map<Igralec,VrstaIgralca> vrstaIgralca;
-	protected Map<Igralec,KdoIgra> kdoIgra;
 	
 	protected Okno okno;
 	
@@ -23,25 +21,26 @@ public class Vodja {
 	
 	protected boolean clovekNaVrsti = false;
 	
-	public Vodja(Okno okno, Map<Igralec, VrstaIgralca> vrstaIgralca, Map<Igralec, KdoIgra> kdoIgra) {
+	public Vodja(Okno okno, Map<Igralec, VrstaIgralca> vrstaIgralca) {
 		this.okno = okno;
 		this.vrstaIgralca = vrstaIgralca;
-		this.kdoIgra = kdoIgra;
 	}
 		
-	public void igramoNovoIgro(int x, int y, String igralec1_ime, String igralec2_ime) {
-		igra = new Igra(x, y, igralec1_ime, igralec2_ime);
+	public void igramoNovoIgro(String igralec1_ime, String igralec2_ime) {
+		Igralec igralec1 = new Igralec(igralec1_ime, Polje.IGRALEC1);
+		Igralec igralec2 = new Igralec(igralec2_ime, Polje.IGRALEC2);
+	
+		igra = new Igra(igralec1, igralec2);
 	}
 	
 	public void igramo() {
 		okno.osvezi_vmesnik();
 		switch (igra.stanje()) {
-		case ZMAGA_O: okno.konec_igre(true); return; 
-		case ZMAGA_X: okno.konec_igre(true); return;
-		case NEODLOCENO: okno.konec_igre(false); return;
+		case ZMAGA1: okno.platno().konecIgre(); return; 
+		case ZMAGA2: okno.platno().konecIgre(); return;
 		// odhajamo iz metode igramo
 		case V_TEKU: 
-			Igralec igralec = igra.na_potezi();
+			Igralec igralec = igra.trenutni_igralec();
 			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
 			switch (vrstaNaPotezi) {
 			case C: 
@@ -56,7 +55,7 @@ public class Vodja {
 	}
 
 	
-	public Inteligenca racunalnikovaInteligenca = new Inteligenca();
+	public MonteCarloTreeSearch racunalnikovaInteligenca = new MonteCarloTreeSearch();
 	
 	public void igrajRacunalnikovoPotezo() {
 		/*
@@ -109,3 +108,4 @@ public class Vodja {
 	public boolean clovekNaVrsti() {
 		return clovekNaVrsti;
 	}
+}
