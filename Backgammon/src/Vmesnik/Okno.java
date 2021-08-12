@@ -52,14 +52,10 @@ public class Okno extends JFrame implements ActionListener{
 		
 		igra = vodja.igra();
 		
-		platno = new Platno(800, 800, vodja, this, igra);
-		add(platno);
-		
-		String[] imena_igralcev = igra.imena_igralcev();
-		ime_igralca_1 = imena_igralcev[0];
-		ime_igralca_2 = imena_igralcev[1];
-		
 		vodja.igramo();
+		
+		(Uporabljena koda iz Gomokuja, ko bo narjeno se jo prilagodi na tisto iz Backgammona)
+		
 		*/
 		
 		
