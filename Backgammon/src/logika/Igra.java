@@ -13,6 +13,7 @@ public class Igra {
 	protected Igralec igralec1;
 	protected Igralec igralec2;
 	protected Igralec trenutni_igralec;
+	
 	public Zetoni[] polje = new Zetoni[24];
 
 	public static void main(String[] args) {
@@ -73,20 +74,26 @@ public class Igra {
 		zamenjaj_igralca();
 	}
 	
-	public List<int[]> mozne_poteze(int premik) {
+	public List<int[]> mozne_poteze(int premik, Zetoni[] opazovano_polje) {
 		int faktor_premika = (trenutni_igralec == igralec1) ? -1 : 1;
 		Polje id = trenutni_igralec.id();
 		List<int[]> mozne_poteze = new ArrayList<int[]>();
+		
+		if (trenutni_igralec.udarjeni_zetoni() > 0) {
+			int ciljno_mesto = (trenutni_igralec == igralec1)
+		}
+		
 		for (int mesto = 0; mesto < 24; mesto++) {
 			int ciljno_mesto = mesto + premik * faktor_premika;
-			Zetoni zetoni = polje[mesto];
+			Zetoni zetoni = opazovano_polje[mesto];
 			if (zetoni.na_polju() != id || !je_veljaven(ciljno_mesto)) continue;
-			Zetoni na_cilju = polje[ciljno_mesto];
+			Zetoni na_cilju = opazovano_polje[ciljno_mesto];
 			if (na_cilju.na_polju() != id && na_cilju.stevilo() > 1) continue;
 			int[] poteza = new int[2];
 			poteza[0] = mesto;
 			poteza[1] = ciljno_mesto;
 			mozne_poteze.add(poteza);
+		
 		}
 		return mozne_poteze;
 		
@@ -94,10 +101,26 @@ public class Igra {
 	
 	public List<HashMap<int[], List<int[]>>> mozna_zaporedja_potez(int premik1, int premik2) {
 		List<HashMap<int[], List<int[]>>> zaporedja_potez = new ArrayList<HashMap<int[], List<int[]>>>();
-		List<int[]> prve_poteze = mozne_poteze(premik1);
+		List<int[]> prve_poteze = mozne_poteze(premik1, polje);
 		for (int[] poteza : prve_poteze) {
-			
+			HashMap<int[], List<int[]>> mozna_zaporedja_poteze = new HashMap<int[], List<int[]>>();
+			Zetoni[] kopija_polja = polje.clone();
+			kopija_polja[poteza[0]].odstrani();
+			kopija_polja[poteza[1]].dodaj(trenutni_igralec.id());
+			List<int[]> druge_poteze = mozne_poteze(premik2, kopija_polja);
+			mozna_zaporedja_poteze.put(poteza, druge_poteze);
+			zaporedja_potez.add(mozna_zaporedja_poteze);
 		}
+		return zaporedja_potez;
+	}
+	
+	public List<List<HashMap<int[], List<int[]>>>> vse_veljavne_poteze(int premik1, int premik2) {
+		List<List<HashMap<int[], List<int[]>>>> vse_poteze = new ArrayList<List<HashMap<int[], List<int[]>>>>();
+		List<HashMap<int[], List<int[]>>> prva_druga = mozna_zaporedja_potez(premik1, premik2);
+		List<HashMap<int[], List<int[]>>> druga_prva = mozna_zaporedja_potez(premik2, premik1);
+		vse_poteze.add(prva_druga);
+		vse_poteze.add(druga_prva);
+		return vse_poteze;
 	}
 	
 	private boolean je_veljaven(int mesto) {
