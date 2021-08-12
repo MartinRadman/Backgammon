@@ -76,11 +76,19 @@ public class Igra {
 	
 	public List<int[]> mozne_poteze(int premik, Zetoni[] opazovano_polje) {
 		int faktor_premika = (trenutni_igralec == igralec1) ? -1 : 1;
+		int zacetek_doma = (trenutni_igralec == igralec1) ? 0 : 18;
 		Polje id = trenutni_igralec.id();
 		List<int[]> mozne_poteze = new ArrayList<int[]>();
 		
 		if (trenutni_igralec.udarjeni_zetoni() > 0) {
-			int ciljno_mesto = (trenutni_igralec == igralec1)
+			int ciljno_mesto = (trenutni_igralec == igralec1) ? 24 - premik : premik - 1;
+			Zetoni na_cilju = opazovano_polje[ciljno_mesto];
+			if (na_cilju.na_polju() == id || na_cilju.stevilo() <= 1) {
+				int[] poteza = new int[2];
+				poteza[0] = -1;
+				poteza[1] = ciljno_mesto;
+				mozne_poteze.add(poteza);
+			}
 		}
 		
 		for (int mesto = 0; mesto < 24; mesto++) {
@@ -95,8 +103,32 @@ public class Igra {
 			mozne_poteze.add(poteza);
 		
 		}
+		
+		if (je_vse_doma()) {
+			for (int korak = 0; korak <= 5; korak++) {
+				int mesto = zacetek_doma + korak;
+				int ciljno_mesto = mesto + premik * faktor_premika;
+				Zetoni opazovano_mesto = opazovano_polje[mesto];
+				if (opazovano_mesto.na_polju() == id && !je_veljaven(ciljno_mesto)) {
+					int[] poteza = new int[2];
+					poteza[0] = mesto;
+					poteza[1] = 24;
+					mozne_poteze.add(poteza);
+				}
+			}
+		}
+		
 		return mozne_poteze;
 		
+	}
+	
+	private boolean je_vse_doma() {
+		int zacetek = (trenutni_igralec == igralec1) ? 6 : 0;
+		for (int korak = 0; korak <= 17; korak++) {
+			Zetoni opazovano_mesto = polje[zacetek + korak];
+			if (opazovano_mesto.na_polju() == trenutni_igralec.id()) return false;
+		}
+		return true;
 	}
 	
 	public List<HashMap<int[], List<int[]>>> mozna_zaporedja_potez(int premik1, int premik2) {
@@ -114,13 +146,57 @@ public class Igra {
 		return zaporedja_potez;
 	}
 	
-	public List<List<HashMap<int[], List<int[]>>>> vse_veljavne_poteze(int premik1, int premik2) {
+	public List<List<HashMap<int[], List<int[]>>>> vse_mozne_poteze(int premik1, int premik2) {
 		List<List<HashMap<int[], List<int[]>>>> vse_poteze = new ArrayList<List<HashMap<int[], List<int[]>>>>();
 		List<HashMap<int[], List<int[]>>> prva_druga = mozna_zaporedja_potez(premik1, premik2);
 		List<HashMap<int[], List<int[]>>> druga_prva = mozna_zaporedja_potez(premik2, premik1);
 		vse_poteze.add(prva_druga);
 		vse_poteze.add(druga_prva);
 		return vse_poteze;
+	}
+	
+	public void vse_validne_poteze(List<List<HashMap<int[], List<int[]>>>> vse_poteze) {
+		List<int[]> validne_poteze = new ArrayList<int[]>();
+		List<List<HashMap<int[], List<int[]>>>> ociscene_poteze = new ArrayList<List<HashMap<int[], List<int[]>>>>();
+		List<Integer> mozne_zaporedne_poteze = new ArrayList<Integer>();
+		
+		for (List<HashMap<int[], List<int[]>>> sez_potez : vse_poteze) {
+			int mozne_zaporedne_poteze_aux = 0;
+			List<HashMap<int[], List<int[]>>> sez_ociscenih_potez = prvo_ciscenje(sez_potez);
+			ociscene_poteze.add(sez_ociscenih_potez);
+			if (sez_ociscenih_potez.size() > 0) mozne_zaporedne_poteze_aux = 1;
+			for (HashMap<int[], List<int[]>> poteza : sez_ociscenih_potez) {
+				if (poteza.values().iterator().next().size() > 0) mozne_zaporedne_poteze_aux = 2;
+			}
+			mozne_zaporedne_poteze.add(mozne_zaporedne_poteze_aux);
+		}
+		
+		
+		
+		
+	}
+	
+	private List<HashMap<int[], List<int[]>>> prvo_ciscenje(List<HashMap<int[], List<int[]>>> sez_potez) {
+		int udarjeni = trenutni_igralec.udarjeni_zetoni();
+		List<HashMap<int[], List<int[]>>> sez_ociscenih_potez = new ArrayList<HashMap<int[], List<int[]>>>();
+		
+		for (HashMap<int[], List<int[]>> poteza : sez_potez) {
+			int[] prva = poteza.keySet().iterator().next();
+			List<int[]> drugi = poteza.get(prva);
+			
+			if (udarjeni > 0 && prva[0] != -1) continue;
+			udarjeni--;
+			if (udarjeni > 0) {
+				for (int[] druga : drugi) {
+					if (druga[0] != -1) drugi.remove(druga);
+				}
+			}
+			
+			HashMap<int[], List<int[]>> ociscena_poteza = new HashMap<int[], List<int[]>>();
+			ociscena_poteza.put(prva, drugi);
+			sez_ociscenih_potez.add(ociscena_poteza);
+		}
+		return sez_ociscenih_potez;
 	}
 	
 	private boolean je_veljaven(int mesto) {
