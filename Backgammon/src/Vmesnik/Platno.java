@@ -257,8 +257,13 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        		start_i_x = s_polja - s_rob - n_polovica - i * s_trikotnika * 103 / 100 + s_trikotnika / 5 * 2; // podobno smo naredili za pozicije drugih 6 Å¡tevilk
 	        	}
 	        	
+
 	        	// ko smo pravilno nastavili pozicijo Å¡tevila, ki ga hoÄ�emo izpisati, nastavimo Å¡e potrebne lastnosti g-ja.
 	        	g.setColor(barva_stevilk);
+
+	        	// ko smo pravilno nastavili pozicijo števila, ki ga hočemo izpisati, nastavimo še potrebne lastnosti g-ja.
+	        	if (aktivno_polje == af && aktivno_polje == i) g.setColor(barva_igralca_na_potezi);
+	        	else g.setColor(barva_stevilk);
 	        	String stevilka = "" + i;
 	        	// Å¡tevilko sedaj izriÅ¡emo na Å¾eljeno mesto
 	        	g.drawString(stevilka, start_i_x, start_i_y);
@@ -277,7 +282,8 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        	else {
 	        		start_i_x = s_polja - s_rob - j * s_trikotnika * 103 / 100 + s_trikotnika / 3;
 	        	}
-	        	g.setColor(barva_stevilk);
+	        	if (aktivno_polje == af && aktivno_polje == i + 12) g.setColor(barva_igralca_na_potezi);
+	        	else g.setColor(barva_stevilk);
 	        	String stevilka = "" + (i + 12);
 	        	g.drawString(stevilka, start_i_x, start_i_y);
 	        	
