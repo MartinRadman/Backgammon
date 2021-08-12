@@ -37,6 +37,32 @@ public class Okno extends JFrame implements ActionListener{
 		// ime okna
 		setTitle("Backgammon");
 		
+		// pripravljeno za vodjo
+		/* Map<Igralec, VrstaIgralca> vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
+		vrstaIgralca.put(Igralec.O, igralec1);
+		vrstaIgralca.put(Igralec.X, igralec2);
+		
+		Map<Igralec, KdoIgra> kdoIgra = new EnumMap<Igralec, KdoIgra>(Igralec.class);
+		kdoIgra.put(Igralec.O, new KdoIgra(igralec1_ime));
+		kdoIgra.put(Igralec.X, new KdoIgra(igralec2_ime));
+		
+		Vodja vodja = new Vodja(this, vrstaIgralca, kdoIgra);
+		
+		vodja.igramoNovoIgro(sirina_igralnega_polja, visina_igralnega_polja, igralec1_ime, igralec2_ime);
+		
+		igra = vodja.igra();
+		
+		platno = new Platno(800, 800, vodja, this, igra);
+		add(platno);
+		
+		String[] imena_igralcev = igra.imena_igralcev();
+		ime_igralca_1 = imena_igralcev[0];
+		ime_igralca_2 = imena_igralcev[1];
+		
+		vodja.igramo();
+		*/
+		
+		
 		// nastavimo platno in osnovne dimenzije
 		platno = new Platno(800, 800, this);
 		add(platno);
