@@ -40,25 +40,25 @@ public class Okno extends JFrame implements ActionListener{
 		// nastavimo platno in osnovne dimenzije
 		platno = new Platno(800, 800, this);
 		add(platno);
-		//"aktiviramo" zaËetno pozicijo
+		//"aktiviramo" za√®etno pozicijo
 		platno.zacetnaPozicija();
 		
 		// naredimo nekaj menijev, iz katerih lahko recimo izberemo barvo igralca ipd.
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 		
-		// dodamo meni igra, z podmenijem nova igra, ki pa bo ponudila dve moûnosti, nova osnova igra in nova igra proti raËunalniku
+		// dodamo meni igra, z podmenijem nova igra, ki pa bo ponudila dve mo≈ænosti, nova osnova igra in nova igra proti ra√®unalniku
 		JMenu menuIgra = dodajMenu(menubar, "Igra");
 		JMenu menuNovaIgra = dodajMenuNaMenu(menuIgra, "Nova igra");
 		
 		menuOsnovnaIgra = dodajMenuItem(menuNovaIgra, "Nova osnovna igra");
-		menuIgraProtiRacunalniku = dodajMenuItem(menuNovaIgra, "Nova igra proti raËunalniku");
-		// v primeru, da smo na platnu priûgali igra_po_meri se poleg pokaûe tudi igra po meri
+		menuIgraProtiRacunalniku = dodajMenuItem(menuNovaIgra, "Nova igra proti raƒçunalniku");
+		// v primeru, da smo na platnu pri≈ægali igra_po_meri se poleg poka≈æe tudi igra po meri
 		if (platno.igra_po_meri) {
 			menuIgraPoMeri = dodajMenuItem(menuNovaIgra, "Nova igra po meri ...");
 		}
 		
-		// dodajmo öe nov meni z moûnostimi prilagoditev, kjer lahko nastavimo barvo igralcev
+		// dodajmo ≈°e nov meni z mo≈ænostimi prilagoditev, kjer lahko nastavimo barvo igralcev
 		JMenu menuPrilagoditve = dodajMenu(menubar, "Prilagoditve");
 		JMenu menuBarvaIgralcev = dodajMenuNaMenu(menuPrilagoditve, "Spremeni barvo igralcev ...");
 		
@@ -68,7 +68,7 @@ public class Okno extends JFrame implements ActionListener{
 		
 	}
 	
-	// metoda, ki zaûnee okno vendar ne sprejme nobenih argumentov
+	// metoda, ki za≈ænee okno vendar ne sprejme nobenih argumentov
 	public Okno() {
 		this(ime_igralca_1, ime_igralca_2);
 	}
@@ -79,7 +79,7 @@ public class Okno extends JFrame implements ActionListener{
 
 	
 
-	// spisali smo par metod, da bomo laûje naredili nove menije oz. nove podmenije in predmete? (item)
+	// spisali smo par metod, da bomo la≈æje naredili nove menije oz. nove podmenije in predmete? (item)
 	public JMenu dodajMenu(JMenuBar menubar, String naslov) {
 		JMenu menu = new JMenu(naslov);
 		menubar.add(menu);
@@ -100,12 +100,12 @@ public class Okno extends JFrame implements ActionListener{
 	}
 	
 	
-	// nastavimo kaj se zgodi, ko pritisnemo na doloËen item znotraj menija
+	// nastavimo kaj se zgodi, ko pritisnemo na dolo√®en item znotraj menija
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource(); 
 		
-		// Ëe izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 1
+		// √®e izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 1
 		if (source == menuBarvaIgralca1) {
 			Color barva = JColorChooser.showDialog(this, "Izberi barvo igralca", platno.barva_igralca_1);
 			if (barva != null) {
@@ -114,7 +114,7 @@ public class Okno extends JFrame implements ActionListener{
 			}
 		}
 		
-		// Ëe izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 2
+		// √®e izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 2
 		if (source == menuBarvaIgralca2) {
 			Color barva = JColorChooser.showDialog(this, "Izberi barvo igralca", platno.barva_igralca_2);
 			if (barva != null) {
@@ -123,18 +123,18 @@ public class Okno extends JFrame implements ActionListener{
 			}
 		}
 		
-		// nova igra zaûene novo igro (oËitno)
+		// nova igra za≈æene novo igro (o√®itno)
 		if (source == menuOsnovnaIgra) {
 			platno.novaIgra();
 			platno.repaint();
 		}
 		
-		// nova igra proti raËunalniku zaûene novo igro proti raËunalniku 
+		// nova igra proti ra√®unalniku za≈æene novo igro proti ra√®unalniku 
 		if (source == menuIgraProtiRacunalniku) {
 			platno.launcher();
 		}
 		
-		// igra po meri, Ëe bo kaj za po meri ampak zaenkrat ne kaûe na to moûnost
+		// igra po meri, √®e bo kaj za po meri ampak zaenkrat ne ka≈æe na to mo≈ænost
 		if (source == menuIgraPoMeri) {
 			platno.launcher();
 		}

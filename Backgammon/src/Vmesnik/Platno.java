@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 
 
 import Vmesnik.Okno;
+import logika.Igra;
 
 
 
@@ -39,10 +40,12 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	
 	// Najprej naredimo prostor za definiranje vseh spremenljivk, ki jih bomo potrebovali za vmesnik
 
+	protected Igra igra;
+	
 	protected boolean osnovni_meni = true;
 	protected boolean aktivna_igra = false;
 	protected boolean diceRoll = false;
-	protected boolean igra_po_meri = false;
+	protected boolean igra_po_meri = true;
 	protected boolean konec_igre = false;
 	protected int v_polja;
 	protected int s_polja;
@@ -970,8 +973,10 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	public void RollTheDice() {
 		pokazi_poteze = true;
 		//(1)
-		kocka1 = (int)(Math.random() * 6) + 1;
-		kocka2 = (int)(Math.random() * 6) + 1;
+		int[] met_kocke = igra.vrzi_kocki();
+		
+		kocka1 = met_kocke[0];
+		kocka2 = met_kocke[1];
 		
 		//(2)
 		if (kocka1 == kocka2) {
@@ -1170,6 +1175,8 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 									int m = plosca_igralec_2.get(nova);
 									plosca_igralec_2.replace(nova, m + 1);
 									if (plosca_igralec_1.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
+									
+									igra.odigraj(aktivna - 1, nova - 1);
 							
 							}
 						}
@@ -1291,9 +1298,11 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	public void konecIgre() {
 	
 	 // ime se importa iz igre
-	
+
+		igra.zamenjaj_igralca();
+		
 		JPanel okence = new JPanel();
-		JOptionPane.showMessageDialog(okence, "Zmagal je " + zmagovalec() , "Konec igre", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(okence, "Zmagal je " + igra.trenutni_igralec().ime() , "Konec igre", JOptionPane.PLAIN_MESSAGE);
 	
 	}
 	

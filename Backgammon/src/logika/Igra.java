@@ -1,10 +1,14 @@
 package logika;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+
+
 
 import logika.Zetoni.Polje;
 
@@ -155,14 +159,15 @@ public class Igra {
 		return vse_poteze;
 	}
 	
-	public void vse_validne_poteze(List<List<HashMap<int[], List<int[]>>>> vse_poteze) {
-		List<int[]> validne_poteze = new ArrayList<int[]>();
+	public HashMap<int[], List<int[]>> vse_validne_poteze(List<List<HashMap<int[], List<int[]>>>> vse_poteze) {
+		HashMap<int[], List<int[]>> validne_poteze = new HashMap<int[], List<int[]>>();
 		List<List<HashMap<int[], List<int[]>>>> ociscene_poteze = new ArrayList<List<HashMap<int[], List<int[]>>>>();
 		List<Integer> mozne_zaporedne_poteze = new ArrayList<Integer>();
+		List<HashMap<int[], List<int[]>>> sez_ociscenih_potez;
 		
 		for (List<HashMap<int[], List<int[]>>> sez_potez : vse_poteze) {
 			int mozne_zaporedne_poteze_aux = 0;
-			List<HashMap<int[], List<int[]>>> sez_ociscenih_potez = prvo_ciscenje(sez_potez);
+			sez_ociscenih_potez = prvo_ciscenje(sez_potez);
 			ociscene_poteze.add(sez_ociscenih_potez);
 			if (sez_ociscenih_potez.size() > 0) mozne_zaporedne_poteze_aux = 1;
 			for (HashMap<int[], List<int[]>> poteza : sez_ociscenih_potez) {
@@ -172,8 +177,44 @@ public class Igra {
 		}
 		
 		
+		if (mozne_zaporedne_poteze.contains(2)) {
+			for (List<HashMap<int[], List<int[]>>> sez_potez : ociscene_poteze) {
+				for (HashMap<int[], List<int[]>> poteza : sez_potez) {
+					int[] prva_poteza = poteza.keySet().iterator().next();
+					List<int[]> druge_poteze = poteza.values().iterator().next();
+					if (druge_poteze.size() > 0) {
+							validne_poteze.put(prva_poteza, druge_poteze);
+					}
+				}
+			}
+		}
 		
 		
+		if (mozne_zaporedne_poteze.contains(1)) {
+			if (mozne_zaporedne_poteze.get(0) == 1 && mozne_zaporedne_poteze.get(1) == 1) {
+				List<HashMap<int[], List<int[]>>> prva_ociscena = ociscene_poteze.get(0);
+				List<HashMap<int[], List<int[]>>> druga_ociscena = ociscene_poteze.get(1);
+				int[] premik1 = prva_ociscena.get(0).keySet().iterator().next();
+				int[] premik2 = druga_ociscena.get(0).keySet().iterator().next();
+				int izbrani = (Math.abs(premik1[0] - premik1[1]) > Math.abs(premik2[0] - premik2[1])) ? 0 : 1;
+				for (HashMap<int[], List<int[]>> poteza : ociscene_poteze.get(izbrani)) {
+					int[] prva_poteza = poteza.keySet().iterator().next();
+					List<int[]> druge_poteze = poteza.values().iterator().next();
+					validne_poteze.put(prva_poteza, druge_poteze);
+				}
+			}
+			
+			
+			for (List<HashMap<int[], List<int[]>>> sez_potez : ociscene_poteze) {
+				for (HashMap<int[], List<int[]>> poteza : sez_potez) {
+					int[] prva_poteza = poteza.keySet().iterator().next();
+					List<int[]> druge_poteze = poteza.values().iterator().next();
+					validne_poteze.put(prva_poteza, druge_poteze);
+				}
+			}	
+		}
+		
+		return validne_poteze;
 	}
 	
 	private List<HashMap<int[], List<int[]>>> prvo_ciscenje(List<HashMap<int[], List<int[]>>> sez_potez) {
@@ -210,5 +251,9 @@ public class Igra {
 		else {
 			trenutni_igralec = igralec1;
 		}
+	}
+	
+	public Igralec trenutni_igralec() {
+		return trenutni_igralec;
 	}
 }

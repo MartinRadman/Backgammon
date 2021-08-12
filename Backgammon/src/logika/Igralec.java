@@ -41,7 +41,7 @@ public class Igralec {
 	}
 	
 	public void dodaj_izlocenega() {
-		if (izloceni_zetoni > 15) throw new Error("Preveč udarjenih žetonov");
+		if (izloceni_zetoni > 15) throw new Error("Preveč izločenih žetonov");
 		izloceni_zetoni += 1;
 	}
 }
