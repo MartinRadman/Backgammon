@@ -19,6 +19,8 @@ public class Igra {
 	protected Igralec trenutni_igralec;
 	
 	public Zetoni[] polje = new Zetoni[24];
+	
+	protected HashMap<int[], List<int[]>> vse_validne = new HashMap<int[], List<int[]>>();
 
 	public static void main(String[] args) {
 		Igra igra = new Igra(new Igralec("enel", Polje.IGRALEC1), new Igralec("inel", Polje.IGRALEC2));
@@ -68,6 +70,14 @@ public class Igra {
 		int druga = rand.nextInt(max);
 		tabela[0] = prva + 1;
 		tabela[1] = druga + 1;
+		
+		vse_validne = vse_validne_poteze(prva + 1, druga + 1);
+		
+		if (vse_validne.size() == 0) {
+			zamenjaj_igralca();
+			tabela[0] = -1;
+			tabela[1] = -1;
+		}
 		
 		return tabela;
 	}
@@ -159,7 +169,8 @@ public class Igra {
 		return vse_poteze;
 	}
 	
-	public HashMap<int[], List<int[]>> vse_validne_poteze(List<List<HashMap<int[], List<int[]>>>> vse_poteze) {
+	public HashMap<int[], List<int[]>> vse_validne_poteze(int premik1, int premik2) {
+		List<List<HashMap<int[], List<int[]>>>> vse_poteze = vse_mozne_poteze(premik1, premik2);
 		HashMap<int[], List<int[]>> validne_poteze = new HashMap<int[], List<int[]>>();
 		List<List<HashMap<int[], List<int[]>>>> ociscene_poteze = new ArrayList<List<HashMap<int[], List<int[]>>>>();
 		List<Integer> mozne_zaporedne_poteze = new ArrayList<Integer>();
@@ -194,9 +205,9 @@ public class Igra {
 			if (mozne_zaporedne_poteze.get(0) == 1 && mozne_zaporedne_poteze.get(1) == 1) {
 				List<HashMap<int[], List<int[]>>> prva_ociscena = ociscene_poteze.get(0);
 				List<HashMap<int[], List<int[]>>> druga_ociscena = ociscene_poteze.get(1);
-				int[] premik1 = prva_ociscena.get(0).keySet().iterator().next();
-				int[] premik2 = druga_ociscena.get(0).keySet().iterator().next();
-				int izbrani = (Math.abs(premik1[0] - premik1[1]) > Math.abs(premik2[0] - premik2[1])) ? 0 : 1;
+				int[] premik_prvi = prva_ociscena.get(0).keySet().iterator().next();
+				int[] premik_drugi = druga_ociscena.get(0).keySet().iterator().next();
+				int izbrani = (Math.abs(premik_prvi[0] - premik_prvi[1]) > Math.abs(premik_drugi[0] - premik_drugi[1])) ? 0 : 1;
 				for (HashMap<int[], List<int[]>> poteza : ociscene_poteze.get(izbrani)) {
 					int[] prva_poteza = poteza.keySet().iterator().next();
 					List<int[]> druge_poteze = poteza.values().iterator().next();
@@ -255,5 +266,9 @@ public class Igra {
 	
 	public Igralec trenutni_igralec() {
 		return trenutni_igralec;
+	}
+	
+	public HashMap<int[], List<int[]>> vse_validne() {
+		return vse_validne;
 	}
 }

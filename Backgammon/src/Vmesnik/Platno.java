@@ -110,7 +110,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	
 	// definiramo platno, zato da se nam bodo zadeve prikazovali
 	
-	public Platno(int sirina, int visina, Okno okno) {
+	public Platno(int sirina, int visina, Okno okno, Igra igra) {
 		super();
 		setPreferredSize(new Dimension(sirina, visina));
 		
@@ -122,24 +122,26 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		addMouseMotionListener(this);
 		addKeyListener(this);
 		setFocusable(true);
+		
+		this.igra = igra;
 	}
 	
-	// pod paintcomponent bomo zapisali vse kar želimo, da se nam ob določenih trenutkih prikaže
+	// pod paintcomponent bomo zapisali vse kar Å¾elimo, da se nam ob doloÄ�enih trenutkih prikaÅ¾e
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		
 		Rectangle r = this.getBounds(); // Najprej pridobimo dimenzije okna
-		// nastavimo osnovne dolžine, ki jih bomo za prikaz tako ali drugače uporabljali. Naj opomnim, da je vse prilagojeno na sliko, ki je pravzaprav zgolj slika polja za Backgammon
-		v_polja = r.height;  // v_pola je okrajšava za višino polja in jo preberemo direktno iz višine "r"
-		s_polja = r.width;   // podobno velja za s_polja, ki je okrajšava za širino polja 
-		s_rob = (int) (s_polja * 0.055); // s_rob je okrajšava za širino roba, keoficient je izmerjen z nekim drugim pripomočkom a je izmerjen precej natančno
-		s_trikotnika = (int) (s_polja * 0.07); // s_trikotnika je okrajšava za širino trikotnika, prav tako je razmerje med širino trioktnika in širino polja izmerjeno
-		n_polovica = (int) (s_polja * 0.03); // n_polovica je širina vmesne prečke, postopek merjenja je enak kot pri prejšnih dveh
-		v_rob = (int) (v_polja * 0.055); // v_rob je okrajšava za višino polja
-		v_trikotnika = (int) (v_polja * 0.337); // v_trikotnika pa višina trikotnika
+		// nastavimo osnovne dolÅ¾ine, ki jih bomo za prikaz tako ali drugaÄ�e uporabljali. Naj opomnim, da je vse prilagojeno na sliko, ki je pravzaprav zgolj slika polja za Backgammon
+		v_polja = r.height;  // v_pola je okrajÅ¡ava za viÅ¡ino polja in jo preberemo direktno iz viÅ¡ine "r"
+		s_polja = r.width;   // podobno velja za s_polja, ki je okrajÅ¡ava za Å¡irino polja 
+		s_rob = (int) (s_polja * 0.055); // s_rob je okrajÅ¡ava za Å¡irino roba, keoficient je izmerjen z nekim drugim pripomoÄ�kom a je izmerjen precej natanÄ�no
+		s_trikotnika = (int) (s_polja * 0.07); // s_trikotnika je okrajÅ¡ava za Å¡irino trikotnika, prav tako je razmerje med Å¡irino trioktnika in Å¡irino polja izmerjeno
+		n_polovica = (int) (s_polja * 0.03); // n_polovica je Å¡irina vmesne preÄ�ke, postopek merjenja je enak kot pri prejÅ¡nih dveh
+		v_rob = (int) (v_polja * 0.055); // v_rob je okrajÅ¡ava za viÅ¡ino polja
+		v_trikotnika = (int) (v_polja * 0.337); // v_trikotnika pa viÅ¡ina trikotnika
 		
 		
-		// najrej narišemo ozadje, da lahko potem čez rišemo še ostale zadeve, ta bo vedno v ozadju, ne glede na del igre, v prvem delu bo sledilo kot ozadje, v drugem pa kot igralno polje
+		// najrej nariÅ¡emo ozadje, da lahko potem Ä�ez riÅ¡emo Å¡e ostale zadeve, ta bo vedno v ozadju, ne glede na del igre, v prvem delu bo sledilo kot ozadje, v drugem pa kot igralno polje
 		ImageIcon img = new ImageIcon("Extras/BGv1.1.png");
 		g.drawImage(img.getImage(), 0, 0, this.getWidth(), this.getHeight(), null);
 		
@@ -147,7 +149,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		if (osnovni_meni) {
 			
 			
-			// nato narišemo naslov
+			// nato nariÅ¡emo naslov
 	        String naslov = "BACKGAMMON";
 			g.setColor(barva_naslova);
 			velikost_pisave = (int) Math.min(0.1 * s_polja, 0.1 * v_polja);
@@ -158,17 +160,17 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 
 			g.drawString(naslov, start, (int) Math.round(0.2 * v_polja));			
 			
-			// sedaj pa bomo odvisno od tega ali je igra_po_meri true ali false prikazali dva različna menija
-			// za začetek najprej nastavimo kaj bo pisalo na gumbih, kjer si bomo lahko izbrali igro
+			// sedaj pa bomo odvisno od tega ali je igra_po_meri true ali false prikazali dva razliÄ�na menija
+			// za zaÄ�etek najprej nastavimo kaj bo pisalo na gumbih, kjer si bomo lahko izbrali igro
 			String gumb1 = "NOVA IGRA";
-			String gumb2 = "NOVA IGRA PROTI RAČUNALNIKU";
+			String gumb2 = "NOVA IGRA PROTI RAÄŒUNALNIKU";
 			String gumb3 = "NOVA IGRA PO MERI";
 			
-			// naslednja dva primera if bosta na videz zelo podobna in res sta si, vendar sta različna, ker različno razoredita gumbe
-			// teoretično bi se dalo kodo skrajšati vendar bi to lahko škodilo preglednosti v primeru prilagajanja
+			// naslednja dva primera if bosta na videz zelo podobna in res sta si, vendar sta razliÄ�na, ker razliÄ�no razoredita gumbe
+			// teoretiÄ�no bi se dalo kodo skrajÅ¡ati vendar bi to lahko Å¡kodilo preglednosti v primeru prilagajanja
 			if (!igra_po_meri) {
 				
-				//v primeru ko igre po meri ni, potrebujemo samo dva gumba, ki sta nižje, najprej pod (1) nareišemo gumba, potem pod (2) napišemo čez, kar na gumbih piše
+				//v primeru ko igre po meri ni, potrebujemo samo dva gumba, ki sta niÅ¾je, najprej pod (1) nareiÅ¡emo gumba, potem pod (2) napiÅ¡emo Ä�ez, kar na gumbih piÅ¡e
 				
 				//(1)
 				g.setColor(barva_ovala_1);
@@ -194,7 +196,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 			
 			if (igra_po_meri) {
 				
-				//v primeru ko je igra po meri vklučena, se polje izriše malce drugače, a na enak način
+				//v primeru ko je igra po meri vkluÄ�ena, se polje izriÅ¡e malce drugaÄ�e, a na enak naÄ�in
 				
 				//(1)
 				g.setColor(barva_ovala_1);
@@ -235,36 +237,36 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 			
 			//ko enkrat zapustimo osnovni zaslo aka. launcher se igra spremeni v aktivno (glej MouseClicked)
 			
-			//najprej bomo oštevilčili polja (trikotnike):
+			//najprej bomo oÅ¡tevilÄ�ili polja (trikotnike):
 			
 	        velikost_pisave = (int) Math.min(0.05 * s_polja, 0.05 * v_polja); //nastavimo velikost pisave (to je samo vmesni korak, ki pripomorje k preglednosti) 
-	        int velikost_stevilk = (int) (velikost_pisave * faktor_velikosti_stevcev_polj); // sedaj pa s pomočjo prejšnega koraka nastavimo željeno velikost številk
-	        //Opomba: faktor_velikosti_stevcev_polj je konstanta, ki pa je sicer definirana na vrhu, tako da lažje spreminjamo, v primeru, da se odločimo, da nam ne bi bila velikost pisave povsem všeč
-	        g.setFont(new Font("Times New Roman", Font.PLAIN, velikost_stevilk)); // nastavimo še tip (način?) pisave 
+	        int velikost_stevilk = (int) (velikost_pisave * faktor_velikosti_stevcev_polj); // sedaj pa s pomoÄ�jo prejÅ¡nega koraka nastavimo Å¾eljeno velikost Å¡tevilk
+	        //Opomba: faktor_velikosti_stevcev_polj je konstanta, ki pa je sicer definirana na vrhu, tako da laÅ¾je spreminjamo, v primeru, da se odloÄ�imo, da nam ne bi bila velikost pisave povsem vÅ¡eÄ�
+	        g.setFont(new Font("Times New Roman", Font.PLAIN, velikost_stevilk)); // nastavimo Å¡e tip (naÄ�in?) pisave 
 	        
-	        //najprej napišemo zgornjih 12 številk
+	        //najprej napiÅ¡emo zgornjih 12 Å¡tevilk
 	        for (int i=1; i < 13; i++) {
 	        	int start_i_y = v_polja / 20; // nastavimo visino, ta bo za vse stevilke enaka
-	        	int start_i_x = 0; // nastavimo še širino, kjer se bo številka izpisala, tega bomo v naslednjih par korakih z nekaj računanja pravilno nastavili, mi pa smo mu za začetek pripisali neko osnovno vrednost v velikosti 0
+	        	int start_i_x = 0; // nastavimo Å¡e Å¡irino, kjer se bo Å¡tevilka izpisala, tega bomo v naslednjih par korakih z nekaj raÄ�unanja pravilno nastavili, mi pa smo mu za zaÄ�etek pripisali neko osnovno vrednost v velikosti 0
 	        	
 	        	//najprej pogledamo prvi kvadrant (prvih 6 in drugih 6 moramo obravnavati posebej zaradi vmesne linije, ki naredi zamik)
 	        	if (i <= 6) {
-	        		start_i_x = s_polja - s_rob -  i * s_trikotnika * 103 / 100 + s_trikotnika / 3; // z nekaj regulacijami in poskušanjem smo našli najbolj optimalno pozicijo za prvih 6 številk
+	        		start_i_x = s_polja - s_rob -  i * s_trikotnika * 103 / 100 + s_trikotnika / 3; // z nekaj regulacijami in poskuÅ¡anjem smo naÅ¡li najbolj optimalno pozicijo za prvih 6 Å¡tevilk
 	        	} 
 	        	else {
-	        		start_i_x = s_polja - s_rob - n_polovica - i * s_trikotnika * 103 / 100 + s_trikotnika / 5 * 2; // podobno smo naredili za pozicije drugih 6 številk
+	        		start_i_x = s_polja - s_rob - n_polovica - i * s_trikotnika * 103 / 100 + s_trikotnika / 5 * 2; // podobno smo naredili za pozicije drugih 6 Å¡tevilk
 	        	}
 	        	
-	        	// ko smo pravilno nastavili pozicijo števila, ki ga hočemo izpisati, nastavimo še potrebne lastnosti g-ja.
+	        	// ko smo pravilno nastavili pozicijo Å¡tevila, ki ga hoÄ�emo izpisati, nastavimo Å¡e potrebne lastnosti g-ja.
 	        	g.setColor(barva_stevilk);
 	        	String stevilka = "" + i;
-	        	// številko sedaj izrišemo na željeno mesto
+	        	// Å¡tevilko sedaj izriÅ¡emo na Å¾eljeno mesto
 	        	g.drawString(stevilka, start_i_x, start_i_y);
 	        	
 	        	// to ponovimo 12x
 	        	}
 	        
-	        // še spodnjih 12 številk, postopek analogen zgornjemu, zato ne bo opisan ponovno, le manjša opomba, da so vrednosti različe od zgoraj, saj so vse spodnje številke dvomestne in je tako prilagajanje bilo malce drugačno kot zgoraj
+	        // Å¡e spodnjih 12 Å¡tevilk, postopek analogen zgornjemu, zato ne bo opisan ponovno, le manjÅ¡a opomba, da so vrednosti razliÄ�e od zgoraj, saj so vse spodnje Å¡tevilke dvomestne in je tako prilagajanje bilo malce drugaÄ�no kot zgoraj
 	        for (int i=1; i < 13; i++) {
 	        	int start_i_y = v_polja - v_rob / 2 + v_rob / 6;
 	        	int start_i_x = 0;
@@ -280,16 +282,16 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        	g.drawString(stevilka, start_i_x, start_i_y);
 	        	
 	        }
-	        // sedaj imamo označena vsa polja s številko
+	        // sedaj imamo oznaÄ�ena vsa polja s Å¡tevilko
 	        
 	        
-	        // dodajmo kocke, najprej natavimo lastnosti, ki jih želimo, da jih kocke imajo (predvsem barva), potem pa določimo željeno pozicijo, ki je v našem primeru nekje na levi strani polja
+	        // dodajmo kocke, najprej natavimo lastnosti, ki jih Å¾elimo, da jih kocke imajo (predvsem barva), potem pa doloÄ�imo Å¾eljeno pozicijo, ki je v naÅ¡em primeru nekje na levi strani polja
 	        g.setColor(barva_kock);
 	        int start_kocka_x = s_rob + 2 * s_trikotnika;
 	        int dim_kocke = Math.min(s_rob, v_rob) * 3 / 2; 
 	        int start_kocka_y = v_polja / 2 - dim_kocke / 2;
 	        
-	        // ko smo enkrat določili vse kar smo želeli, izrišemo kocke
+	        // ko smo enkrat doloÄ�ili vse kar smo Å¾eleli, izriÅ¡emo kocke
 	        g.fillRoundRect(start_kocka_x, start_kocka_y, dim_kocke, dim_kocke, dim_kocke / 4, dim_kocke / 4);
 	        g.fillRoundRect(start_kocka_x + dim_kocke + s_trikotnika / 5, start_kocka_y, dim_kocke, dim_kocke,dim_kocke / 4, dim_kocke / 4);
 	        g.setColor(Color.BLACK);
@@ -308,18 +310,18 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
     		g.setColor(Color.BLACK);
     		g.drawRoundRect(start_met_x, start_met_y, dim_met, dim_met, dim_met / 4, dim_met / 4);
 	        
-    		// sedaj bomo izpisali število pik na posamezni kocki
+    		// sedaj bomo izpisali Å¡tevilo pik na posamezni kocki
 	        String kocka1 = "" + this.kocka1;
 	        String kocka2 = "" + this.kocka2;
 	        g.setFont(new Font("Times New Roman", Font.PLAIN, velikost_stevilk * 2));
 	        g.drawString(kocka1, start_kocka_x + dim_kocke* 5 / 16, start_kocka_y + dim_kocke - dim_kocke / 6);
 	        g.drawString(kocka2, start_kocka_x + dim_kocke + s_trikotnika / 5 + dim_kocke * 5/ 16, start_kocka_y + dim_kocke - + dim_kocke / 6);
 	        
-	        // hkrati pa bomo v primeru da je nastavljeno pokazi_poteze, kar dobesedno pomeni "met je bil izveden, sedaj igralec premika ploščke" 
+	        // hkrati pa bomo v primeru da je nastavljeno pokazi_poteze, kar dobesedno pomeni "met je bil izveden, sedaj igralec premika ploÅ¡Ä�ke" 
 	        
-	        // naslednji razdelek nam bo izpisal zadeve, ki se prikažejo samo takrat, ko je igralec dejansko na potezi, namreč pike na kockah ostaneju tudi po tem, ko je igralec že končal in ostanejo vse dokler drugi igralec ne vrže ponovno
+	        // naslednji razdelek nam bo izpisal zadeve, ki se prikaÅ¾ejo samo takrat, ko je igralec dejansko na potezi, namreÄ� pike na kockah ostaneju tudi po tem, ko je igralec Å¾e konÄ�al in ostanejo vse dokler drugi igralec ne vrÅ¾e ponovno
 	        if (pokazi_poteze) {
-	        	// spodnjih nekja vrstic najprej pokaže koliko potez za met določene kocke nam je še ostalo, ponavadi gre za enice, ki se po premaknji potezi spremenijo v 0 
+	        	// spodnjih nekja vrstic najprej pokaÅ¾e koliko potez za met doloÄ�ene kocke nam je Å¡e ostalo, ponavadi gre za enice, ki se po premaknji potezi spremenijo v 0 
 	        	g.setColor(barva_stevilk);
 	        	g.setFont(new Font("Times New Roman", Font.PLAIN, velikost_stevilk));
 	        	g.drawString("Poteze:", start_met_x - dim_kocke / 2, start_met_y - dim_kocke / 4);
@@ -328,22 +330,22 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        	
 	        	// med_potezo je zanimiv, kriterij, ki sicer zelo redko ni aktivne hkrati z pokazi_poteze pa vendar se vse to dogaja pod njim:
 	        	if (med_potezo) {
-	        		// najprej se gumb za met obarva v skladu z nastavljeno barva_med_metom, to igralcem pove, da je igra v fazi potez in ne meta, na nek način si lahko prestavljamo to, kot sporočilo, da je gumb za met takrat "zaklenjen"
+	        		// najprej se gumb za met obarva v skladu z nastavljeno barva_med_metom, to igralcem pove, da je igra v fazi potez in ne meta, na nek naÄ�in si lahko prestavljamo to, kot sporoÄ�ilo, da je gumb za met takrat "zaklenjen"
 	        		g.setColor(barva_med_metom);
 	        		g.fillRoundRect(start_met_x, start_met_y, dim_met, dim_met, dim_met /4, dim_met /4);
 	        		g.setColor(Color.BLACK);
 	        		g.drawRoundRect(start_met_x, start_met_y, dim_met, dim_met, dim_met / 4, dim_met / 4);
 	        		
-	        		// ker pa s tem, ko se gumb zaklene in prebarva zgubimo podatek o tem kdo je na vrsti, se poleg gumba za met pojavi še žeton v barvi igralca na potezi
+	        		// ker pa s tem, ko se gumb zaklene in prebarva zgubimo podatek o tem kdo je na vrsti, se poleg gumba za met pojavi Å¡e Å¾eton v barvi igralca na potezi
 	        		g.setColor(barva_igralca_na_potezi);
 	        		g.fillOval(s_rob + s_trikotnika / 2 - dim_met / 2, start_met_y, dim_met, dim_met);
 	        		
-	        		//poleg tega se na desni strani kock pojavi puščica, ki kaže v katero smer igralec na potezi igra (če slučajno pozabi)
+	        		//poleg tega se na desni strani kock pojavi puÅ¡Ä�ica, ki kaÅ¾e v katero smer igralec na potezi igra (Ä�e sluÄ�ajno pozabi)
 	        		Graphics2D g2d = (Graphics2D)g;
 	        		g2d.setStroke(new BasicStroke(debelina_puscice));
 	        		g2d.setColor(barva_igralca_na_potezi);
 	        		
-	        		//puščica v obliki podrte črke U je sestavljena iz petih črt: 
+	        		//puÅ¡Ä�ica v obliki podrte Ä�rke U je sestavljena iz petih Ä�rt: 
 	        		
 	        		// osnovne tri ostanejo enake in na istih mestih, le barva se spremeni
 	        		// zgornja 
@@ -353,7 +355,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        		// spodnja
 	        		g2d.drawLine(start_kocka_x + 2 * dim_kocke + s_trikotnika / 2, start_kocka_y + 5 * dim_kocke / 6, start_kocka_x + 2 * dim_kocke + 5 * s_trikotnika / 4  , start_kocka_y + 5 * dim_kocke / 6);
 	        		
-	        		//preostavli dve, tvorita konico puščice in sta na nasprotnih repih puščice
+	        		//preostavli dve, tvorita konico puÅ¡Ä�ice in sta na nasprotnih repih puÅ¡Ä�ice
 	        		//spodnji rep
 	        		if (igralec_na_potezi) {
 	        			g2d.drawLine(start_kocka_x + 2 * dim_kocke + 5 * s_trikotnika / 4  , start_kocka_y + 5 * dim_kocke / 6,  start_kocka_x + 2 * dim_kocke + 5 * s_trikotnika / 4 - dim_kocke / 4 , start_kocka_y + 5 * dim_kocke / 6 - dim_kocke / 4);
@@ -368,70 +370,70 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        }
 	        
 	        
-	        // o tu naprej bomo izrisevali pozicionirane žetone
+	        // o tu naprej bomo izrisevali pozicionirane Å¾etone
 	        
-	        //najprej v seznam igralcev dodamo plosčo posameznega igralca (le-ta se spreminja, ko ploščke premikamo, zato jo moramo vpeljati vedno znova)
+	        //najprej v seznam igralcev dodamo plosÄ�o posameznega igralca (le-ta se spreminja, ko ploÅ¡Ä�ke premikamo, zato jo moramo vpeljati vedno znova)
 	        seznam_igralcev.add(plosca_igralec_1);
 	        seznam_igralcev.add(plosca_igralec_2);
 	        
-	        // določimo velikost žetona, to lahko prav tako kasneje spreminjamo na vrhu
+	        // doloÄ�imo velikost Å¾etona, to lahko prav tako kasneje spreminjamo na vrhu
 	        int dim_zeton = (int) ((int) dim_kocke * faktor_zeton_velikost); 
 	        
-	        /* lotimo se izrisevanja žetonov:
+	        /* lotimo se izrisevanja Å¾etonov:
 	         * 
-	         * Žetone bomo risali od roba igralnega polja proti notranjosti
-	         * V primeru, da bo ćetonov več kot 5 bomo vse nabasali v en kup, nato pa zraven kupa zapisali koliko žetonov sestavja ta stolp 
+	         * Å½etone bomo risali od roba igralnega polja proti notranjosti
+	         * V primeru, da bo Ä‡etonov veÄ� kot 5 bomo vse nabasali v en kup, nato pa zraven kupa zapisali koliko Å¾etonov sestavja ta stolp 
 	         *  
 	         */
 	        
-	        // seveda moramo za oba igralca narisati, tako da se spremhodimo čez seznam_igralcev, najprej narišemo za enega, nato če za drugega
+	        // seveda moramo za oba igralca narisati, tako da se spremhodimo Ä�ez seznam_igralcev, najprej nariÅ¡emo za enega, nato Ä�e za drugega
 	        for (HashMap<Integer, Integer> seznam : seznam_igralcev) { 
-	        	// potem za vsako polje preverimo koliko žetonov moramo tamo narisati in pa na katerm mestu
+	        	// potem za vsako polje preverimo koliko Å¾etonov moramo tamo narisati in pa na katerm mestu
 	        	for (int key : seznam.keySet()) {
 	        		int polje = seznam.get(key);
 	        		
 	        		
 	        		
-	        		// plosca_igralec_x vsebuje informacije za vseh 24 polj, potem pa se informacije o izločenih ploščkih, pod številko 26, in o ploščkih iz igre (0 ali 25), ter kdo je lastnik te ploče (100) 
-	        		// v primeru da plošča pripada igralcu ena, nastavimo barvo na barva_igralca_1
+	        		// plosca_igralec_x vsebuje informacije za vseh 24 polj, potem pa se informacije o izloÄ�enih ploÅ¡Ä�kih, pod Å¡tevilko 26, in o ploÅ¡Ä�kih iz igre (0 ali 25), ter kdo je lastnik te ploÄ�e (100) 
+	        		// v primeru da ploÅ¡Ä�a pripada igralcu ena, nastavimo barvo na barva_igralca_1
 	        		if(seznam.get(100) == 1) {
 	        			g.setColor(barva_igralca_1);
 	        		}
-	        		// če pa plošča pripada igralcu dva, nastavimo barvo na barva_igralca_2
+	        		// Ä�e pa ploÅ¡Ä�a pripada igralcu dva, nastavimo barvo na barva_igralca_2
 	        		if (seznam.get(100) == 2) {
 	        			g.setColor(barva_igralca_2);
 	        		}     			
 	        		
-	        		// podobno kot pri številkah moramo očiti 4 primere, vsak svoj "kvadrant" polja, ker prilagajamo pozicijo glede na polje
+	        		// podobno kot pri Å¡tevilkah moramo oÄ�iti 4 primere, vsak svoj "kvadrant" polja, ker prilagajamo pozicijo glede na polje
 	        		if (key < 7 && key > 0) { 
 		   
 		        		if (polje == 0) {
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + 3 * dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 103/100, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
@@ -451,29 +453,29 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica,  v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + 3 * dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (key - 1) * s_trikotnika * 102/100 - n_polovica, v_rob  + v_trikotnika * 1/50 + 2 * dim_zeton, dim_zeton, dim_zeton);
@@ -493,29 +495,29 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * polje - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * polje  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * (polje - 1)  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * polje  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * (polje - 2)  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * (polje - 1)  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * polje  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * (polje - 3)  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_rob * 113/100 + s_trikotnika / 2 - dim_zeton / 2 + s_trikotnika * (key - 13) * 101/100, v_polja - v_rob - dim_zeton * (polje - 2)  - v_trikotnika * 1/50,  dim_zeton, dim_zeton);
@@ -535,29 +537,29 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton , dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - 2 * dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - 2 * dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - 3 * dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - dim_zeton - dim_zeton, dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika * 103/100, v_polja - v_rob  - v_trikotnika * 1/50 - 2 * dim_zeton - dim_zeton, dim_zeton, dim_zeton);
@@ -571,36 +573,36 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        			g.drawString("" + polje, s_polja - s_rob * 113/100 - s_trikotnika / 2 - dim_zeton / 2 - (24 - key) * s_trikotnika  * 103/100 + s_trikotnika / 8, v_polja - v_rob - v_trikotnika * 2/50 - 2 * dim_zeton + dim_zeton);
 		        		}
 	        		}
-	        		// odstranjeni žetoni igralca 1
+	        		// odstranjeni Å¾etoni igralca 1
 	        		if (key == 0) { 
 		        		
 		        		if (polje == 0) {
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + 2 * dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + 2 * dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + 3 * dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_rob + v_trikotnika * 1/50 + 2 * dim_zeton,  dim_zeton, dim_zeton);
@@ -614,36 +616,36 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        			g.drawString("" + polje, s_polja - s_rob / 2 - dim_zeton / 2 + s_rob / 8, v_rob + v_trikotnika * 1/50 + 2 * dim_zeton);
 		        		}
 	        		}
-	        		//odstranjeni žetoni igralca 2
+	        		//odstranjeni Å¾etoni igralca 2
 	        		if (key == 25) { 
 		        		
 		        		if (polje == 0) {
 		        			// Nothing really happens
 		        		}
 		        		if (polje == 1) {
-		        			// Narisemo en žeton
+		        			// Narisemo en Å¾eton
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 2) {
-		        			// Narisemo dva žetona
+		        			// Narisemo dva Å¾etona
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 2 * dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 3) {
-		        			// Narisemo tri žetone
+		        			// Narisemo tri Å¾etone
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 2 *dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 3 * dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 4) {
-		        			// Narisemo stiri žetone
+		        			// Narisemo stiri Å¾etone
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 2 * dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 3 * dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 4 * dim_zeton,  dim_zeton, dim_zeton);
 		        		}
 		        		if (polje == 5) {
-		        			// Narisemo pet žetonov
+		        			// Narisemo pet Å¾etonov
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 2 * dim_zeton,  dim_zeton, dim_zeton);
 		        			g.fillOval(s_polja - s_rob / 2 - dim_zeton / 2 - s_rob / 16, v_polja - v_rob - v_trikotnika * 1/50 - 3 * dim_zeton,  dim_zeton, dim_zeton);
@@ -658,7 +660,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		        		}
 	        		}
 	        		
-	        		//izločeni žetoni
+	        		//izloÄ�eni Å¾etoni
 	        		if (key == 26) {
 	        			
 	        			if (seznam.get(100) == 1) {
@@ -736,7 +738,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	        		}
 	        	}
 	        }
-	        // če je igre konec nam odpre novo okence
+	        // Ä�e je igre konec nam odpre novo okence
 	        if (konec_igre) {
 				konecIgre();
 			}
@@ -831,37 +833,37 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 				
 		}
 		//DOGAJANJE MED IGRo
-		//preverimo, če je igra sploh aktivna
+		//preverimo, Ä�e je igra sploh aktivna
 		if (aktivna_igra) {
 			
-			// najprej določimo dve spremenljivki, ki nam bosta pomagali pri potezah
+			// najprej doloÄ�imo dve spremenljivki, ki nam bosta pomagali pri potezah
 			af = polje(x,y);
 			int a = aktivno_polje;
 			
 			if (med_potezo) {
-					if (af < 100) { // z vrednostjo več kot 100 so rezervirani kliki, ki ne naredijo nič
-						// preverimo, če imamo na voljo še kakšno potezo
+					if (af < 100) { // z vrednostjo veÄ� kot 100 so rezervirani kliki, ki ne naredijo niÄ�
+						// preverimo, Ä�e imamo na voljo Å¡e kakÅ¡no potezo
 						if (kocka1_poteze + kocka2_poteze > 0) {
-							// če ja lahko naredimo potezo
+							// Ä�e ja lahko naredimo potezo
 							if (poteze) {
 								// naredimo potezo
 								poteza(a, af, igralec_na_potezi);
 								}
-							// le ne, pa bi morali biti zmožni naresti potezo, zato "prižegemo" poteze
+							// le ne, pa bi morali biti zmoÅ¾ni naresti potezo, zato "priÅ¾egemo" poteze
 							if (!poteze) poteze = true;
 					}
 					aktivno_polje = af;
 					
-					// če pa nimamo več potez, potem nastavimo med_potezo na false, kar pravzaprav pomeni, da nastavimo poticijo kock na "pripravljeno za nov met", ter zamenjamo igralca
+					// Ä�e pa nimamo veÄ� potez, potem nastavimo med_potezo na false, kar pravzaprav pomeni, da nastavimo poticijo kock na "pripravljeno za nov met", ter zamenjamo igralca
 					if (kocka1_poteze + kocka2_poteze == 0) {
-						// Opomba: kocka1_poteze + kocka2_poteze je vedno nenegativno število
+						// Opomba: kocka1_poteze + kocka2_poteze je vedno nenegativno Å¡tevilo
 						med_potezo = false;
 						menjajIgralca();
 						resetirajPotezo(); 
 					}
 					
 				}
-					// v primeru, da igralec ne more več narediti poteze lahko s pritiskom na gumb zaključi potezo in jo preda naslednjemu igralcu
+					// v primeru, da igralec ne more veÄ� narediti poteze lahko s pritiskom na gumb zakljuÄ�i potezo in jo preda naslednjemu igralcu
 					if (Met(x, y, start_met_x, start_met_y, dim_met)) {
 						med_potezo = false;
 						menjajIgralca();
@@ -870,7 +872,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 				
 			}
 			else { 
-				// če pa nismo med potezo, potem preverimo, če smo pritisnili na gumb za met
+				// Ä�e pa nismo med potezo, potem preverimo, Ä�e smo pritisnili na gumb za met
 				if (Met(x, y, start_met_x, start_met_y, dim_met)) {
 					med_potezo = true; // nastavimo na true, da aktiviramo potezo
 					RollTheDice(); // vremo kocke, ki nastavijo novi vrednosti
@@ -879,19 +881,19 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		       	   	
 		}
 		
-		repaint(); // na koncu pononvo pobarvamo, da se nam polje osveži
+		repaint(); // na koncu pononvo pobarvamo, da se nam polje osveÅ¾i
 
 	}
 	@Override
 	public void mousePressed(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		// Mouse pressed bomo uporabili samo, na začetnem meniju. In sicer ko bomo pritisnili gumb, se bo ta obarval, da bomo videli, da smo ga pritisnili 
+		// Mouse pressed bomo uporabili samo, na zaÄ�etnem meniju. In sicer ko bomo pritisnili gumb, se bo ta obarval, da bomo videli, da smo ga pritisnili 
 		if (osnovni_meni) {
 			
-			// zopet ločimo dva primera, glede na igro_po_meri
+			// zopet loÄ�imo dva primera, glede na igro_po_meri
 			if (igra_po_meri) {
-				// gre za kopijo kode od zgoraj, razen tega, namesto pa da se aktiviran nova igra ali igra proti računalniku pa se območje gumba obarva rdeče
+				// gre za kopijo kode od zgoraj, razen tega, namesto pa da se aktiviran nova igra ali igra proti raÄ�unalniku pa se obmoÄ�je gumba obarva rdeÄ�e
 				int x1 = start + dolzina_naslova / 2;
 				int y1 = (int) Math.round(0.4 * v_polja) - velikost_pisave / 2 + velikost_pisave / 4;
 			
@@ -939,7 +941,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX();
 		int y = e.getY();
-		// ko miško spustimo (ko nehamo pritisnit na gumb) se nam gumb povrne v osonvo barvo
+		// ko miÅ¡ko spustimo (ko nehamo pritisnit na gumb) se nam gumb povrne v osonvo barvo
 		if (osnovni_meni) {
 			barva_ovala_1 = barva_ovala_2  = barva_ovala_3 =  new Color(51,51,51);
 		}
@@ -969,7 +971,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		return (preveri_x && preveri_y);
 							
 		}
-	//metoda RollTheDice nastavi nove vrednosti za kocki, le te naključno izbere (1), prav tako nastavi osnovno število potez, ki jih ima igralec za vsak met glede na padli kocki (2)
+	//metoda RollTheDice nastavi nove vrednosti za kocki, le te nakljuÄ�no izbere (1), prav tako nastavi osnovno Å¡tevilo potez, ki jih ima igralec za vsak met glede na padli kocki (2)
 	public void RollTheDice() {
 		pokazi_poteze = true;
 		//(1)
@@ -1005,18 +1007,18 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		}
 	}
 	
-	//metoda razlika izračuna absolutno vrednost razlike med dvema številoma, metodo se uporabi znotraj metode poteza
+	//metoda razlika izraÄ�una absolutno vrednost razlike med dvema Å¡teviloma, metodo se uporabi znotraj metode poteza
 	public int razlika(int aktivna, int nova) {
 		return Math.abs(aktivna - nova);
 	}
 	
-	//metoda resetirajPotezo v primeru napačne poteze nastavi osnovne vrednosti poteze na nerelavantne
+	//metoda resetirajPotezo v primeru napaÄ�ne poteze nastavi osnovne vrednosti poteze na nerelavantne
 	public void resetirajPotezo() {
-		aktivno_polje = 250; // aktivno polje je tisto, s katerega bomo želeli narediti potezo
+		aktivno_polje = 250; // aktivno polje je tisto, s katerega bomo Å¾eleli narediti potezo
 		af = 250; // 
 	}
 	
-	//metoda izolciZeton se pokliče, kadar igralec "poje" žeton nasprotnika, metoda poveča število izločenih žetonov tistega igralca in premakne žeton igralca, ki je pojedel 
+	//metoda izolciZeton se pokliÄ�e, kadar igralec "poje" Å¾eton nasprotnika, metoda poveÄ�a Å¡tevilo izloÄ�enih Å¾etonov tistega igralca in premakne Å¾eton igralca, ki je pojedel 
 	public void izlociZeton(int mesto, boolean igralec_na_potezi) {
 		if (igralec_na_potezi) {
 			int n = plosca_igralec_2.get(26);
@@ -1030,175 +1032,62 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		}
 	}
 	
-	//metoda poteza naredi potezo, vmes pa še preveri, če je poteza sploh legalna
+	//metoda poteza naredi potezo, vmes pa Å¡e preveri, Ä�e je poteza sploh legalna
 	public void poteza(int aktivna, int nova, boolean igralec_na_potezi) {
-		// na novo definiramo nekaj parametrov, prvič, da so krajpi, drugič, da jih lahko spreminjamo, ne da bi vplivali na generalne spremenljivke igre
-		int a = razlika(aktivna, nova); // razlika aktivne in nove je pravzaprav razdalja med dvema poljema, ki sta bila izbrana ee za drugim (s klikom na miško)
-		int b = kocka1;
-		int c = kocka2;
-		int e = kocka1_poteze;
-		int f = kocka2_poteze;
-		// če je razdalja 0 oz. če smo zaporedoma pritisnili dvakrat isto polje s ne zgodi nič
-		if (a != 0){
-			// preverimo, če je prvo izbrano polje (od koder želimo premikati ploščke) slučajno kode 75 ali 50, to sta ratlični kodi ki obe opisujeta mesto 26 ali izločene ploščke. 50 je za igralca 1, 75 za igralca 2
-			if (aktivna == 50 || aktivna == 75) {
-				if (aktivna == 50) {
-					a = razlika(0, nova); // zmanipuliramo, da misli, da je pravzaprav 0, saj je, če bi izločili žetone ta ravno 0 (met 1 pomeni, da lahko žeton postavimo nazaj v igro na polje 1)
-					aktivna = 26; // aktivno pa prav tako ročno prestavimo na 26, da bodo spremembe v seznamu, torej plošči pravilno zabeležene
-					//definiramo r (da zavzame manj prsotora)
-					int r = plosca_igralec_1.get(26);
-					// če je r = 0, kar pomeni, da igralec nima izločenih žetonov, se vse skupaj zaključi, torej resetiramo potezo (ne moremo narediti poteze od nekje, kjer nimamo žetonov)
-					if (r == 0) resetirajPotezo();
-					if (plosca_igralec_2.get(nova) > 1) resetirajPotezo(); // preverimo, če je legalen premik in resetiramo potezo, če ni
-					else {
-						if ((a == b && e != 0) || (a == c && f != 0)) { // preverimo, če nam kateri od metov dovoljuje premik za to razdaljo
-							if (a == b && e > 0) { // če nam to dovoljuje prvi met ga "porabimo", torej zmanjšamo količino metov tiste kocke za 1
-								b = 0; 
-								e = 0; 
-								kocka1_poteze--;
-							}
-							else { // sicer nam to dovoljuje drugi met (drugače ne gre), je pa znotraj else zanke saj tega ne sme preveriti, če je preveril prvi if, saj bi tedaj v primeru dvojnih kock odštel obe hkrati  
-								if (a == c) c = 0; f = 0; kocka2_poteze--;
-							}
-						
-					
-							
-							// sicer pa odštejemo en žeton iz območja izločenih in ga prištejemo na novo dodeljeno polje
-							plosca_igralec_1.replace(26, r - 1);
-							int m = plosca_igralec_1.get(nova);
-							plosca_igralec_1.replace(nova, m + 1);
-							if (plosca_igralec_2.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
-																
-							
-						}
-					}
-					}
-				// podobno naredimo če je na potezi igralec 2 le malenkost moramo spremeniti oštevilčena polja (0 -> 25 in obratno) ter zamenjati polje, ki ga spreminjamo
-				if (aktivna == 75) {
-					a = razlika(25, nova);
-					aktivna = 26;
+		// na novo definiramo nekaj parametrov, prviÄ�, da so krajpi, drugiÄ�, da jih lahko spreminjamo, ne da bi vplivali na generalne spremenljivke igre
+		int[] korak = new int[2];
+		korak[0] = (aktivna == 26) ? -1 : aktivna - 1;
+		korak[1] = (nova == 0 || nova == 25) ? 24 : nova - 1;
+		
+		int a = razlika(aktivna, nova);
+			
+		if (igra.vse_validne().keySet().contains(korak)) {
+			if (igralec_na_potezi) {
+				int vrednost = plosca_igralec_1.get(aktivna);
+				plosca_igralec_1.replace(aktivna, vrednost - 1);
 				
-					int r = plosca_igralec_2.get(26);
-					
-					if (r == 0) resetirajPotezo();
-					if (plosca_igralec_1.get(nova) > 1) resetirajPotezo(); 
-					else {
-						if ((a == b && e != 0) || (a == c && f != 0)) { 
-							if (a == b && e > 0) { 
-								b = 0; 
-								e = 0; 
-								kocka1_poteze--;
-							}
-							else { 
-								if (a == c) c = 0; f = 0; kocka2_poteze--;
-							}
-						
-							plosca_igralec_2.replace(26, r - 1);
-							int m = plosca_igralec_1.get(nova);
-							plosca_igralec_2.replace(nova, m + 1);
-							if (plosca_igralec_1.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
-																
-							
-						}
-					}
-					}
+				int vrednost_dodane = plosca_igralec_1.get(nova);
+				plosca_igralec_1.replace(nova, vrednost_dodane + 1);
 				
-				}
-			// ko pa nimamo tako zahtvnih primerov (prestavlamo iz polja v polje), principi so enaki kot zgoraj vendar veliko bolj posplošeni
-			// najprej preverimo, želejana poteza zadostuje meto kock
-			if ((a == b && e != 0) || (a == c && f != 0)) { 
-				// preverimo, kdo je na vrsti, da bomo vedeli čigave poteze bomo pravzaprav spremljali in posledično čigavo ploščo bomo spreminjali
-				if (igralec_na_potezi) { 
-					// preverimo, še da je aktivno polje pod 100 (tore da je premik iz enega polja) ter preverimo, da je premik narejen v polje (karakterizacija polja je zadnja metoda)
-					if (plosca_igralec_1 != null && aktivna < 100 && nova < 100) {
-						
-						/* preverimo še:
-						 * če nova < aktivna , bi pomenilo, da igralec 1 premika figure v negativno smer, kar pa jih ne more, se poteza resetira
-						 * če ima igralec 2 na mestu kamor želi igralec 1 postaviti žeton že 2, se poteza tdi resetira
-						 * če igralec 1 nima izpraznjenega polja z izločenimi žetoni mora najprej narediti potezo z njimi, torej se ta poteza razveljavi oz. resetira
-						 * če igralec še ni v zaključni fazi (nima vseh svojih žetonov v svoji hiši), se resetira
-						 */
-						if ((nova < aktivna) || (plosca_igralec_2.get(nova) > 1) || (plosca_igralec_1.get(26) != 0) || (nova == 25 && !zakljucnaFaza(plosca_igralec_1))) {
-							resetirajPotezo();						
-						}
-						else {
-							// in še enkrat tako kot zgoraj, preverimo še zadnjo stvar, če iz mesta sploh lahko prestavljamo plošček ali ne
-							int r = plosca_igralec_1.get(aktivna);
-							if (r == 0) resetirajPotezo();
-							else {
-							
-								// enako kot v primeru, ko smo premikali ploščke iz območja izločenih, tudi tu popravimo število metov
-								if (a == b && e > 0) {
-									b = 0; 
-									e = 0; 
-									kocka1_poteze--;
-								}
-								else {
-									if (a == c) c = 0; f = 0; kocka2_poteze--;
-								
-								}
-							
-									// ko zadovoljuje naša potez avsem pravilom jo izvedemo, število ploščkov na aktivnem polju zmanjšamo za 1, število na novem polju pa za 1 povečamo
-									int z = aktivna;
-									plosca_igralec_1.replace(z, r - 1);
-									int m = plosca_igralec_1.get(nova);
-									plosca_igralec_1.replace(nova, m + 1);
-									if (plosca_igralec_2.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
-							
-							}
-						}
-					}
-				}
-				// zadevo ponovimo, za igralca 2, žal moramo ppreveriti, kdo je na vrsti že precej zgoaj v fazi preverjanja, saj preverjamo ploščo posameznega igralca (to nanese malo ponovitev kode)
-				if (!igralec_na_potezi) { 
-					if (plosca_igralec_1 != null && aktivna < 100 && nova < 100) {
-						
-						if ((nova > aktivna) || (plosca_igralec_1.get(nova) > 1) || (plosca_igralec_2.get(26) != 0) || (nova == 0 && !zakljucnaFaza(plosca_igralec_2))) {
-							resetirajPotezo();	
-						}
-						else {
-							int r = plosca_igralec_2.get(aktivna);
-							if (r == 0) resetirajPotezo();
-							else {
-							
-								if (a == b && e > 0) {
-									b = 0; 
-									e = 0; 
-									kocka1_poteze--;
-								}
-								else {
-									if (a == c) c = 0; f = 0; kocka2_poteze--;
-								
-								}
-									int z = aktivna;
-									plosca_igralec_2.replace(z, r - 1);
-									int m = plosca_igralec_2.get(nova);
-									plosca_igralec_2.replace(nova, m + 1);
-									if (plosca_igralec_1.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
-									
-									igra.odigraj(aktivna - 1, nova - 1);
-							
-							}
-						}
-					}
-				}
-		 }	
+				if (plosca_igralec_2.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
+				
+				if (kocka1 == a) kocka1_poteze--;
+				else kocka2_poteze--;
+				
+				igra.odigraj(korak[0], korak[1]);
+			}
+			
+			else {
+				int vrednost = plosca_igralec_2.get(aktivna);
+				plosca_igralec_2.replace(aktivna, vrednost - 1);
+				
+				int vrednost_dodane = plosca_igralec_2.get(nova);
+				plosca_igralec_2.replace(nova, vrednost_dodane + 1);
+				
+				if (plosca_igralec_1.get(nova) == 1) izlociZeton(nova, igralec_na_potezi);
+				
+				if (kocka1 == a) kocka1_poteze--;
+				else kocka2_poteze--;
+				
+				igra.odigraj(korak[0], korak[1]);
+			}
 		}
+		
 		
 	}
 	
-	//metoda zacetnaPozicija nastavi ploščke tako, kot so na začetku vsake igre, praktično nastavi začtna polja igralcev
+	//metoda zacetnaPozicija nastavi ploÅ¡Ä�ke tako, kot so na zaÄ�etku vsake igre, praktiÄ�no nastavi zaÄ�tna polja igralcev
 	public void zacetnaPozicija() {
 		// definiramo zacetna slovarja
 		this.plosca_igralec_1 = new HashMap<Integer, Integer>();
 		this.plosca_igralec_2 = new HashMap<Integer, Integer>();
 		
-		//in ju napolnimo tako, da je na vsakem polju 0 žetonov
+		//in ju napolnimo tako, da je na vsakem polju 0 Å¾etonov
 		for (int j = 0; j < 27; j++) {
 			plosca_igralec_1.put(j, 0);
 			plosca_igralec_2.put(j, 0);
 		}
-		//potem pa zamenjamo pri vsakem tako, da zadostuje začetni postavitvi
+		//potem pa zamenjamo pri vsakem tako, da zadostuje zaÄ�etni postavitvi
 		plosca_igralec_1.replace(1, 2);
 		plosca_igralec_1.replace(12, 5);
 		plosca_igralec_1.replace(17, 3);
@@ -1207,17 +1096,17 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		plosca_igralec_2.replace(8, 3);
 		plosca_igralec_2.replace(13, 5);
 		plosca_igralec_2.replace(24, 2);
-		// na koncu dodamo še "lastništvo" torej šteilo, ki nam pove, kdo je lastnik plošče, ne da bi rabili iti ven iz plošče
+		// na koncu dodamo Å¡e "lastniÅ¡tvo" torej Å¡teilo, ki nam pove, kdo je lastnik ploÅ¡Ä�e, ne da bi rabili iti ven iz ploÅ¡Ä�e
 		plosca_igralec_1.put(100, 1);
 		plosca_igralec_2.put(100, 2);
 		
 		
 	}
 	
-	//metoda Polje iz klika določi katero polje (trikotnik) je bil pritisnjen. Kljub temu da so polja trikotniki je "hitbox" pravokotnik, saj je polje v primeru, ko polje zseda 5 žetonov le to bolj intuitivno pritisniti kot pravokotnik
+	//metoda Polje iz klika doloÄ�i katero polje (trikotnik) je bil pritisnjen. Kljub temu da so polja trikotniki je "hitbox" pravokotnik, saj je polje v primeru, ko polje zseda 5 Å¾etonov le to bolj intuitivno pritisniti kot pravokotnik
 	public int polje(int x, int y) {
 		
-		// levi zgornji del plošče
+		// levi zgornji del ploÅ¡Ä�e
 		for (int i = 0; i < 6; i++) {
 			if (s_rob + i * s_trikotnika < x && s_rob + s_trikotnika * (i + 1) > x) {
 				if (v_rob  < y && v_rob + v_trikotnika > y) {
@@ -1261,15 +1150,15 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 			}
 		}
 		// pojedeni
-		//Opomba: polje za pojedene je pravzaprav eno samo, a je s pomočno preverjanja, kdo je na potezi moč določiti dve različni vrednosti. Izbrani sta 50 in 75, saj sta obe pod 100 (eden od pogojev pri metodi poteza), hkrat pa, če se slučajno pojavita v metodi razlika() (kar se sicer ne bi smeli) vrnedta vrednost več kot 6 in se ne skladata z metom.
+		//Opomba: polje za pojedene je pravzaprav eno samo, a je s pomoÄ�no preverjanja, kdo je na potezi moÄ� doloÄ�iti dve razliÄ�ni vrednosti. Izbrani sta 50 in 75, saj sta obe pod 100 (eden od pogojev pri metodi poteza), hkrat pa, Ä�e se sluÄ�ajno pojavita v metodi razlika() (kar se sicer ne bi smeli) vrnedta vrednost veÄ� kot 6 in se ne skladata z metom.
 		if (s_rob + 6 * s_trikotnika + n_polovica < x && s_rob + s_polja - s_rob > x) {
 			if (v_rob + v_trikotnika + v_trikotnika / 50 < y && v_polja - v_rob - v_trikotnika - v_trikotnika / 50 > y) {
-				return (igralec_na_potezi) ? 50 : 75;
+				return 26;
 				// Mimogrede, od tod pridejo vrednosti aktivne 50 in 75 pri metodi poteza, ki se tarkat zdijo nepojasljive
 			}
 		}
 		
-		// v primeru da pa kliknemo izven vseh polj, pa vrne vrednost 1000. Dovolj dobro bi bilo katerokoli število > 100. Recimo števlo 250 pri resetiraj potezo ima praktično enako uporabo vendar se je zaradi iskanja hroščev uporabilo razlišno število.
+		// v primeru da pa kliknemo izven vseh polj, pa vrne vrednost 1000. Dovolj dobro bi bilo katerokoli Å¡tevilo > 100. Recimo Å¡tevlo 250 pri resetiraj potezo ima praktiÄ�no enako uporabo vendar se je zaradi iskanja hroÅ¡Ä�ev uporabilo razliÅ¡no Å¡tevilo.
 		return 1000;
 	}
 	
@@ -1294,7 +1183,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		okno.setVisible(true);
 	}
 
-	// metoda konecIgre odpre manjše okence z obvestilom o koncu igre
+	// metoda konecIgre odpre manjÅ¡e okence z obvestilom o koncu igre
 	public void konecIgre() {
 	
 	 // ime se importa iz igre
@@ -1306,7 +1195,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	
 	}
 	
-	// metoda zakljucnaPoteza preveri, ali igralčeva plošča zadostuje pogoju, da lahko začne ploščke premikati izven plošče
+	// metoda zakljucnaPoteza preveri, ali igralÄ�eva ploÅ¡Ä�a zadostuje pogoju, da lahko zaÄ�ne ploÅ¡Ä�ke premikati izven ploÅ¡Ä�e
 	public boolean zakljucnaFaza(HashMap<Integer, Integer> plosca) {
 		if (!igralec_na_potezi) {
 			int i = 24;

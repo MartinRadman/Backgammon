@@ -13,6 +13,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import logika.Igra;
+
 
 
 
@@ -60,7 +62,8 @@ public class Okno extends JFrame implements ActionListener{
 		
 		
 		// nastavimo platno in osnovne dimenzije
-		platno = new Platno(800, 800, this);
+		Igra igra = new Igra();
+		platno = new Platno(800, 800, this, igra);
 		add(platno);
 		//"aktiviramo" zaèetno pozicijo
 		platno.zacetnaPozicija();
