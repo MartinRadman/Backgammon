@@ -43,7 +43,7 @@ Odprlo se vam bo pomožno okno, kjer lahko na 5 različnih načinov izberete nov
 
 Želiva vam obilo zabave in tudi nekaj sreče :).
 
-## Navodila za inštalacijo
+## Navodila za namestitev
 Prenesite vse datoteke. Nato pa sledite _Backgammon_ -> _src_ -> _Vmesnik_ , ter zaženite _launcher.java_.
 
 
