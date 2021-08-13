@@ -11,7 +11,7 @@ Pravila Backgammona sicer niso sila preprosa, a tudi prav težka niso. Najdete j
 
 ### Delovanje
 
-Aplikacija je enostavna za uporabo. Navodila, kako jo naložiti se nahajajo v naslednjem oddelku _(Navodila za inštalacijo)_. Ko jo enkrat zaženete in se znajdete na meniju se prepustite samo še igranju. Če imate prijatelja (ali pa bi radi igrali s samim seboj) izberite *Nova igra*, če pa bi radi na dvoboj izzvali računalnik, pa izberite *Nova igra proti računalniku*.
+Aplikacija je enostavna za uporabo. Navodila, kako jo naložiti se nahajajo v naslednjem oddelku _(Navodila za namestitev)_. Ko jo enkrat zaženete in se znajdete na meniju se prepustite samo še igranju. Če imate prijatelja (ali pa bi radi igrali s samim seboj) izberite *Nova igra*, če pa bi radi na dvoboj izzvali računalnik, pa izberite *Nova igra proti računalniku*.
 
 ![Prva poteza](https://i.imgur.com/i4zRuBD.png)
 
