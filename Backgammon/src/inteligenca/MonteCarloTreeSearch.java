@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import Vmesnik.Okno;
+import Vmesnik.Platno;
 import logika.Igra;
 import logika.Zetoni.Polje;
 import logika.Igra.Stanje;
@@ -23,15 +25,18 @@ public class MonteCarloTreeSearch {
 	protected Drevo koren;
 	protected Polje jaz;
 	protected Igra igra;
+	protected Okno okno;
 	
-	public MonteCarloTreeSearch(Drevo koren, Polje jaz, Igra igra) {
+	public MonteCarloTreeSearch(Drevo koren, Polje jaz, Igra igra, Okno okno) {
 		this.koren = koren;
 		this.jaz = jaz;
 		this.igra = igra;
+		this.okno = okno;
 	}
 
 	
 	public Drevo[] monte_carlo_tree_search() {
+	  okno.platno().RollTheDice();
 	  start = System.currentTimeMillis();
 	  konec = start + casovna_omejitev;
 	  while (System.currentTimeMillis() < konec) {
@@ -118,8 +123,9 @@ public class MonteCarloTreeSearch {
 	
 	public void napolni_s_podlisti(Drevo list, Igra kopija_igre) { // listu poda vse njegove podliste
 		if (list.sez_listov.size() != 0) return;
+		if (kopija_igre.igralec1().izloceni_zetoni() == 15 || kopija_igre.igralec2().izloceni_zetoni() == 15) return;
 		else {
-			if (kopija_igre.treba_izvesti == 0) kopija_igre.vrzi_kocki();
+			while (kopija_igre.treba_izvesti <= 0) kopija_igre.vrzi_kocki();
 			Set<int[]> moznePoteze = kopija_igre.trenutne_validne();
 			while (moznePoteze.size() == 0 && kopija_igre.stanje() == Stanje.V_TEKU) {
 				kopija_igre.vrzi_kocki();
@@ -128,9 +134,13 @@ public class MonteCarloTreeSearch {
 			}
 			List<Drevo> odigrane_poteze = new ArrayList<Drevo>();
 			for (int[] p: moznePoteze) {
+				if (kopija_igre.treba_izvesti <= 0) continue;
 				Igra kopijaIgre = new Igra(kopija_igre);
 				
-				kopijaIgre.odigraj(p[0], p[1]);
+				try {
+					kopijaIgre.odigraj(p[0], p[1]);
+				} catch (Error e)
+				{System.out.println("e");}
 				
 				Drevo poteza = new Drevo(kopijaIgre, p, 0, 0, new ArrayList<Drevo>());
 				poteza.s = list;
@@ -139,7 +149,8 @@ public class MonteCarloTreeSearch {
 				Set<int[]> moznePoteze1 = kopijaIgre.trenutne_validne();
 				List<Drevo> odigrane_poteze1 = new ArrayList<Drevo>();
 				for (int[] b: moznePoteze1) {
-					Igra kopijaIgre1 = new Igra(kopija_igre);
+					if (kopijaIgre.treba_izvesti <= 0) continue;
+					Igra kopijaIgre1 = new Igra(kopijaIgre);
 					boolean failsafe = false;
 					
 					try {
@@ -151,7 +162,7 @@ public class MonteCarloTreeSearch {
 					
 					Drevo poteza1 = new Drevo(kopijaIgre1, b, 0, 0, new ArrayList<Drevo>());
 					poteza1.s = poteza;
-					odigrane_poteze1.add(poteza);
+					odigrane_poteze1.add(poteza1);
 				}
 				if (moznePoteze1.size() != 0) poteza.sez_listov = odigrane_poteze1;
 			}

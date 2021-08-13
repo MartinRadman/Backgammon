@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 
 
 import logika.Igra;
+import logika.Zetoni.Polje;
 import vodja.VrstaIgralca;
 
 
@@ -99,14 +100,16 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	protected Color barva_med_metom = Color.GREEN;
 	protected float faktor_velikosti_stevcev_polj = (float) 0.75;
 	
+	protected boolean ai;
+	
 	
 	// definiramo platno, zato da se nam bodo zadeve prikazovali
 	
-	public Platno(int sirina, int visina, Okno okno, Igra igra) {
+	public Platno(int sirina, int visina, Okno okno, Igra igra, boolean ai) {
 		super();
 		setPreferredSize(new Dimension(sirina, visina));
 		
-		
+		this.ai = ai;
 		
 
 		
@@ -820,7 +823,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 					novaIgra("Igralec 1", "Igralec 2", VrstaIgralca.C, VrstaIgralca.C);
 				}
 				if (Math.abs(x - x2) <= dolzina_naslova / 2 && Math.abs(y - y2) < velikost_pisave / 3) {
-					launcher();
+					novaIgra("Igralec 1", "Igralec 2", VrstaIgralca.C, VrstaIgralca.R);
 				}
 				
 			}
@@ -845,7 +848,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 							// če ja lahko naredimo potezo
 							if (poteze) {
 								// naredimo potezo
-								poteza(a, af, igralec_na_potezi);
+								poteza(a, af);
 								}
 							// le ne, pa bi morali biti zmožni naresti potezo, zato "prižegemo" poteze
 							if (!poteze) poteze = true;
@@ -979,7 +982,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 		//(2)
 		kocka1_poteze = 1;
 		kocka2_poteze = 1;
-			
+		
 		
 		
 		
@@ -1023,7 +1026,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 	}
 	
 	//metoda poteza naredi potezo, vmes pa še preveri, če je poteza sploh legalna
-	public void poteza(int aktivna, int nova, boolean igralec_na_potezi) {
+	public void poteza(int aktivna, int nova) {
 		// na novo definiramo nekaj parametrov, prvič, da so krajpi, drugič, da jih lahko spreminjamo, ne da bi vplivali na generalne spremenljivke igre
 		int[] korak = new int[2];
 		korak[0] = (aktivna == 26) ? -1 : 23 - (aktivna - 1);
@@ -1038,7 +1041,7 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 
 	
 		if (validen) {
-			if (igralec_na_potezi) {
+			if (igra.trenutni_igralec().id() == Polje.IGRALEC1) {
 				int vrednost = plosca_igralec_1.get(aktivna);
 				plosca_igralec_1.replace(aktivna, vrednost - 1);
 				
@@ -1065,7 +1068,19 @@ public class Platno extends JPanel implements MouseListener, MouseMotionListener
 				if (kocka1 == a && kocka1_poteze != 0) kocka1_poteze--;
 				else kocka2_poteze--;
 				
-				okno_igra.vodja.igrajClovekovoPotezo(korak);
+				if (!ai) {
+					okno_igra.vodja.igrajClovekovoPotezo(korak);
+				}
+				
+				else {
+					if (kocka1_poteze + kocka2_poteze == 0) {
+						// Opomba: kocka1_poteze + kocka2_poteze je vedno nenegativno število
+						med_potezo = false;
+						menjajIgralca();
+						resetirajPotezo(); 
+					}
+				}
+				
 			}
 		}
 		

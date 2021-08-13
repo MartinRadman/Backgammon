@@ -57,15 +57,16 @@ public class Okno extends JFrame implements ActionListener{
 		
 		Map<Polje, Igralec> kdoIgra = new EnumMap<Polje, Igralec>(Polje.class);
 		kdoIgra.put(Polje.IGRALEC1, igra.igralec1());
-		kdoIgra.put(Polje.IGRALEC1, igra.igralec2());
+		kdoIgra.put(Polje.IGRALEC2, igra.igralec2());
 		
+		boolean ai = false;
 		
-		
+		if (vrsta2 == VrstaIgralca.R) ai = true;
 		
 		
 		
 		// nastavimo platno in osnovne dimenzije
-		platno = new Platno(800, 800, this, igra);
+		platno = new Platno(800, 800, this, igra, ai);
 		platno.okno_igra = this;
 		add(platno);
 		//"aktiviramo" začetno pozicijo

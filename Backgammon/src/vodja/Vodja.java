@@ -33,7 +33,7 @@ public class Vodja { // vodi potek igre
 	
 		igra = new Igra(igralec1, igralec2);
 		
-		racunalnikovaInteligenca = new MonteCarloTreeSearch(new Drevo(igra), igra.trenutni_igralec().id(), igra);
+		racunalnikovaInteligenca = new MonteCarloTreeSearch(new Drevo(igra), igra.trenutni_igralec().id(), igra, okno);
 	}
 	
 	public void igramo() { // izvede rundo igre
@@ -62,13 +62,14 @@ public class Vodja { // vodi potek igre
 		// izvede računalnikovo rundo s pomočjo swing workerja
 		// swing worker poskrbi, da se umetna inteligenca in vmesnik izvajata v ločenih nitih - pomembno zaradi grafičnih efektov na platnu
 		
-		
+		/*
 		Igra zacetekIgra = igra;
 		SwingWorker<int[][], Void> worker = new SwingWorker<int[][], Void> () {
 			@Override
 			protected int[][] doInBackground() { // določi izbrani potezi
-				int[] poteza1 = racunalnikovaInteligenca.monte_carlo_tree_search()[0].k;
-				int[] poteza2 = racunalnikovaInteligenca.monte_carlo_tree_search()[1].k;
+				Drevo[] poteza = racunalnikovaInteligenca.monte_carlo_tree_search();
+				int[] poteza1 = poteza[0].k;
+				int[] poteza2 = poteza[1].k;
 				try {TimeUnit.MICROSECONDS.sleep(10);} catch (Exception e) {};
 				return new int[][] {poteza1, poteza2};
 			}
@@ -89,6 +90,17 @@ public class Vodja { // vodi potek igre
 			}
 		};
 		worker.execute();
+		*/
+		
+		Drevo[] poteza = racunalnikovaInteligenca.monte_carlo_tree_search();
+		int[] poteza1 = poteza[0].k;
+		int[] poteza2 = poteza[1].k;
+		okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1]);
+		okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1]);
+		igra.odigraj(poteza1[0], poteza1[1]);
+		igra.odigraj(poteza2[0], poteza2[1]);
+		okno.osvezi_vmesnik();
+		igramo();
 		
 	
 	}
@@ -96,7 +108,7 @@ public class Vodja { // vodi potek igre
 	public void igrajClovekovoPotezo(int[] poteza) { // metoda, s katero človek izvede potezo
 		igra.odigraj(poteza[0], poteza[1]);
 		okno.osvezi_vmesnik();
-		igramo();
+		if (igra.treba_izvesti == 0) igramo();
 	}
 	
 	public Igra igra() {
