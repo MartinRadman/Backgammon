@@ -15,7 +15,7 @@ Aplikacija je enostavna za uporabo. Navodila, kako jo naložiti se nahajajo v na
 
 ![Prva poteza](https://i.imgur.com/i4zRuBD.png)
 
-Kocko vržete tako, da pritisnete na gumb poleg kock, barva pa pove, kateri igralec je na vrsti za met. V primeru na sliki _(gor)_ je na vrsti modri igralec.
+Kocko vržete tako, da pritisnete na gumb poleg kock, barva pa pove, kateri igralec je na vrsti za met. V primeru na sliki _(gor)_ je na vrsti črni igralec.
 
 ![Med potezo](https://i.imgur.com/NC8uJIX.png)
 
