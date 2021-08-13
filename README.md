@@ -25,6 +25,7 @@ Ko porabite vse premike, bo aplikacija avtomatično ponudila met naslednjemu igr
 
 V primeru, da za svoje mete ne morete narediti legalne poteze lahko kadarkoli ponovno pritisnete zelen gumb (gumb za met) in zaključili boste potezo, ter jo predali nasprotniku.
 
+Če hočete plošček odmakniti s plošče izberite rob na desni, vzporedno z vašo _hišo_. 
 
 ![Barvna kustomizacija](https://i.imgur.com/uZ6cNrN.png)
 
