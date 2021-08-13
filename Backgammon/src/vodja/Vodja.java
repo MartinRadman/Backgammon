@@ -62,7 +62,7 @@ public class Vodja { // vodi potek igre
 		// izvede računalnikovo rundo s pomočjo swing workerja
 		// swing worker poskrbi, da se umetna inteligenca in vmesnik izvajata v ločenih nitih - pomembno zaradi grafičnih efektov na platnu
 		
-		/*
+		
 		Igra zacetekIgra = igra;
 		SwingWorker<int[][], Void> worker = new SwingWorker<int[][], Void> () {
 			@Override
@@ -82,25 +82,20 @@ public class Vodja { // vodi potek igre
 				if (igra == zacetekIgra) {
 					poteza1 = poteza[0];
 					poteza2 = poteza[1];
-					okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1], okno.platno().igralec_na_potezi);
-					okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1], okno.platno().igralec_na_potezi);
+					okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1]);
+					okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1]);
+					okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1]);
+					okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1]);
+					igra.odigraj(poteza1[0], poteza1[1]);
+					igra.odigraj(poteza2[0], poteza2[1]);
 					okno.osvezi_vmesnik();
 					igramo();
 				}
 			}
 		};
 		worker.execute();
-		*/
 		
-		Drevo[] poteza = racunalnikovaInteligenca.monte_carlo_tree_search();
-		int[] poteza1 = poteza[0].k;
-		int[] poteza2 = poteza[1].k;
-		okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1]);
-		okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1]);
-		igra.odigraj(poteza1[0], poteza1[1]);
-		igra.odigraj(poteza2[0], poteza2[1]);
-		okno.osvezi_vmesnik();
-		igramo();
+		
 		
 	
 	}
