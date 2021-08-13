@@ -31,7 +31,7 @@ V primeru, da za svoje mete ne morete narediti legalne poteze lahko kadarkoli po
 ![Kratka navodila](https://i.imgur.com/tQAAooY.png)
 ### Izgled po meri
 Barvo igralcev lahko poljubno nastavite.
-Vse kar morate storiti je, da v menijo v zgornjem levem kotu izberete *Prilagoditve*. Nato pa si izberete barvo katerega igralca želite zamenjati.
+Vse kar morate storiti je, da v meniju v levem zgornjem kotu izberete *Prilagoditve*. Nato pa si izberete barvo katerega igralca želite zamenjati.
 
 ![Menjaj barvo](https://i.imgur.com/8Z5faF6.png)
 
