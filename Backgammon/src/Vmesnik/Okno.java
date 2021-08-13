@@ -3,17 +3,20 @@ package Vmesnik;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
+import java.util.EnumMap;
+import java.util.Map;
 
 import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import logika.Igra;
+import logika.Igralec;
+import vodja.VrstaIgralca;
+import logika.Zetoni.Polje;
+import vodja.Vodja;
 
 
 
@@ -26,6 +29,8 @@ public class Okno extends JFrame implements ActionListener{
 	protected static String ime_igralca_1 = "Igralec 1";
 	protected static String ime_igralca_2 = "Igralec 2";
 	
+	public Vodja vodja;
+	
 	private JMenuItem menuBarvaIgralca1;
 	private JMenuItem menuBarvaIgralca2;
 	
@@ -34,45 +39,43 @@ public class Okno extends JFrame implements ActionListener{
 	private JMenuItem menuIgraPoMeri;
 
 	// Nredimo in oblikujemo okno
-	public Okno(String igralec1, String igralec2) {
+	public Okno(String igralec1, String igralec2, VrstaIgralca vrsta1, VrstaIgralca vrsta2) {
 		super();
 		// ime okna
 		setTitle("Backgammon");
 		
+		Igra igra = new Igra();
+		
 		// pripravljeno za vodjo
-		/* Map<Igralec, VrstaIgralca> vrstaIgralca = new EnumMap<Igralec, VrstaIgralca>(Igralec.class);
-		vrstaIgralca.put(Igralec.O, igralec1);
-		vrstaIgralca.put(Igralec.X, igralec2);
+		Map<Polje, VrstaIgralca> vrstaIgralca = new EnumMap<Polje, VrstaIgralca>(Polje.class);
+		vrstaIgralca.put(Polje.IGRALEC1, vrsta1);
+		vrstaIgralca.put(Polje.IGRALEC2, vrsta2);
 		
-		Map<Igralec, KdoIgra> kdoIgra = new EnumMap<Igralec, KdoIgra>(Igralec.class);
-		kdoIgra.put(Igralec.O, new KdoIgra(igralec1_ime));
-		kdoIgra.put(Igralec.X, new KdoIgra(igralec2_ime));
-		
-		Vodja vodja = new Vodja(this, vrstaIgralca, kdoIgra);
-		
-		vodja.igramoNovoIgro(sirina_igralnega_polja, visina_igralnega_polja, igralec1_ime, igralec2_ime);
-		
+		vodja = new Vodja(this, vrstaIgralca);
+		vodja.igramoNovoIgro(igralec1, igralec2);
 		igra = vodja.igra();
 		
-		vodja.igramo();
+		Map<Polje, Igralec> kdoIgra = new EnumMap<Polje, Igralec>(Polje.class);
+		kdoIgra.put(Polje.IGRALEC1, igra.igralec1());
+		kdoIgra.put(Polje.IGRALEC1, igra.igralec2());
 		
-		(Uporabljena koda iz Gomokuja, ko bo narjeno se jo prilagodi na tisto iz Backgammona)
 		
-		*/
+		
+		
 		
 		
 		// nastavimo platno in osnovne dimenzije
-		Igra igra = new Igra();
 		platno = new Platno(800, 800, this, igra);
+		platno.okno_igra = this;
 		add(platno);
-		//"aktiviramo" zaèetno pozicijo
+		//"aktiviramo" začetno pozicijo
 		platno.zacetnaPozicija();
 		
 		// naredimo nekaj menijev, iz katerih lahko recimo izberemo barvo igralca ipd.
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
 		
-		// dodamo meni igra, z podmenijem nova igra, ki pa bo ponudila dve možnosti, nova osnova igra in nova igra proti raèunalniku
+		// dodamo meni igra, z podmenijem nova igra, ki pa bo ponudila dve možnosti, nova osnova igra in nova igra proti računalniku
 		JMenu menuIgra = dodajMenu(menubar, "Igra");
 		JMenu menuNovaIgra = dodajMenuNaMenu(menuIgra, "Nova igra");
 		
@@ -90,12 +93,14 @@ public class Okno extends JFrame implements ActionListener{
 		menuBarvaIgralca1 = dodajMenuItem(menuBarvaIgralcev, "Barva igralca " + ime_igralca_1 + " ..."); 
 		menuBarvaIgralca2 = dodajMenuItem(menuBarvaIgralcev, "Barva igralca " + ime_igralca_2 + " ...");
 		
+		vodja.igramo();
+		
 		
 	}
 	
 	// metoda, ki zažnee okno vendar ne sprejme nobenih argumentov
 	public Okno() {
-		this(ime_igralca_1, ime_igralca_2);
+		this(ime_igralca_1, ime_igralca_2, VrstaIgralca.C, VrstaIgralca.R);
 	}
 	
 
@@ -125,12 +130,12 @@ public class Okno extends JFrame implements ActionListener{
 	}
 	
 	
-	// nastavimo kaj se zgodi, ko pritisnemo na doloèen item znotraj menija
+	// nastavimo kaj se zgodi, ko pritisnemo na določen item znotraj menija
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource(); 
 		
-		// èe izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 1
+		// če izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 1
 		if (source == menuBarvaIgralca1) {
 			Color barva = JColorChooser.showDialog(this, "Izberi barvo igralca", platno.barva_igralca_1);
 			if (barva != null) {
@@ -139,7 +144,7 @@ public class Okno extends JFrame implements ActionListener{
 			}
 		}
 		
-		// èe izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 2
+		// če izberemo spremei barvo igralca 1 nam odpre okno, kjer lahko zamenjamo barvo igralca 2
 		if (source == menuBarvaIgralca2) {
 			Color barva = JColorChooser.showDialog(this, "Izberi barvo igralca", platno.barva_igralca_2);
 			if (barva != null) {
@@ -148,18 +153,18 @@ public class Okno extends JFrame implements ActionListener{
 			}
 		}
 		
-		// nova igra zažene novo igro (oèitno)
+		// nova igra zažene novo igro (očitno)
 		if (source == menuOsnovnaIgra) {
-			platno.novaIgra();
+			platno.novaIgra("Igralec 1", "Igralec 2", VrstaIgralca.C, VrstaIgralca.C);
 			platno.repaint();
 		}
 		
-		// nova igra proti raèunalniku zažene novo igro proti raèunalniku 
+		// nova igra proti računalniku zažene novo igro proti računalniku 
 		if (source == menuIgraProtiRacunalniku) {
-			platno.launcher();
+			platno.novaIgra("Igralec 1", "Igralec 2", VrstaIgralca.C, VrstaIgralca.R);
 		}
 		
-		// igra po meri, èe bo kaj za po meri ampak zaenkrat ne kaže na to možnost
+		// igra po meri, če bo kaj za po meri ampak zaenkrat ne kaže na to možnost
 		if (source == menuIgraPoMeri) {
 			platno.launcher();
 		}

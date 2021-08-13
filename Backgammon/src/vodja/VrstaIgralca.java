@@ -1,6 +1,6 @@
 package vodja;
 
-public enum VrstaIgralca {
+public enum VrstaIgralca { // ali človek ali računalnik
 	R, C; 
 
 	@Override

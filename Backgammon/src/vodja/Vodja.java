@@ -9,31 +9,34 @@ import logika.Igra;
 import logika.Igralec;
 import logika.Zetoni.Polje;
 import Vmesnik.Okno;
+import inteligenca.Drevo;
 import inteligenca.MonteCarloTreeSearch;
 
-public class Vodja {	
+public class Vodja { // vodi potek igre
 	
-	protected Map<Igralec,VrstaIgralca> vrstaIgralca;
+	protected Map<Polje, VrstaIgralca> vrstaIgralca; // nam pove kdo je človek, kdo pa računalnik
+	
+	public Map<Polje, Igralec> kdoIgra; // vir objektov, ki predstavljata igralca
 	
 	protected Okno okno;
 	
 	protected Igra igra = null;
 	
-	protected boolean clovekNaVrsti = false;
-	
-	public Vodja(Okno okno, Map<Igralec, VrstaIgralca> vrstaIgralca) {
+	public Vodja(Okno okno, Map<Polje, VrstaIgralca> vrstaIgralca) {
 		this.okno = okno;
 		this.vrstaIgralca = vrstaIgralca;
 	}
 		
-	public void igramoNovoIgro(String igralec1_ime, String igralec2_ime) {
+	public void igramoNovoIgro(String igralec1_ime, String igralec2_ime) { // inicializira novo igro
 		Igralec igralec1 = new Igralec(igralec1_ime, Polje.IGRALEC1);
 		Igralec igralec2 = new Igralec(igralec2_ime, Polje.IGRALEC2);
 	
 		igra = new Igra(igralec1, igralec2);
+		
+		racunalnikovaInteligenca = new MonteCarloTreeSearch(new Drevo(igra), igra.trenutni_igralec().id(), igra);
 	}
 	
-	public void igramo() {
+	public void igramo() { // izvede rundo igre
 		okno.osvezi_vmesnik();
 		switch (igra.stanje()) {
 		case ZMAGA1: okno.platno().konecIgre(); return; 
@@ -41,13 +44,11 @@ public class Vodja {
 		// odhajamo iz metode igramo
 		case V_TEKU: 
 			Igralec igralec = igra.trenutni_igralec();
-			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec);
-			switch (vrstaNaPotezi) {
+			VrstaIgralca vrstaNaPotezi = vrstaIgralca.get(igralec.id());
+			switch (vrstaNaPotezi) { // določa, kateri tip igralca je sedaj na vrsti
 			case C: 
-				clovekNaVrsti = true;
 				break;
 			case R:
-				clovekNaVrsti = false;
 				igrajRacunalnikovoPotezo();
 				break;
 			}
@@ -55,34 +56,33 @@ public class Vodja {
 	}
 
 	
-	public MonteCarloTreeSearch racunalnikovaInteligenca = new MonteCarloTreeSearch();
+	public MonteCarloTreeSearch racunalnikovaInteligenca;
 	
 	public void igrajRacunalnikovoPotezo() {
-		/*
-		Koordinati poteza = racunalnikovaInteligenca.izberiPotezo(igra);
-		
-		igra.odigraj(poteza);
-		okno.odigraj(poteza);
-		okno.osvezi_vmesnik();
-		igramo();
-		*/
+		// izvede računalnikovo rundo s pomočjo swing workerja
+		// swing worker poskrbi, da se umetna inteligenca in vmesnik izvajata v ločenih nitih - pomembno zaradi grafičnih efektov na platnu
 		
 		
 		Igra zacetekIgra = igra;
-		SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void> () {
+		SwingWorker<int[][], Void> worker = new SwingWorker<int[][], Void> () {
 			@Override
-			protected Koordinati doInBackground() {
-				Koordinati poteza = racunalnikovaInteligenca.izberiPotezo(igra);
+			protected int[][] doInBackground() { // določi izbrani potezi
+				int[] poteza1 = racunalnikovaInteligenca.monte_carlo_tree_search()[0].k;
+				int[] poteza2 = racunalnikovaInteligenca.monte_carlo_tree_search()[1].k;
 				try {TimeUnit.MICROSECONDS.sleep(10);} catch (Exception e) {};
-				return poteza;
+				return new int[][] {poteza1, poteza2};
 			}
 			@Override
-			protected void done() {
-				Koordinati poteza = null;
+			protected void done() { // izvede izbrani potezi
+				int[] poteza1 = null;
+				int[] poteza2 = null;
+				int[][] poteza = null;
 				try {poteza = get();} catch (Exception e) {};	
 				if (igra == zacetekIgra) {
-					igra.odigraj(poteza);
-					okno.odigraj(poteza);
+					poteza1 = poteza[0];
+					poteza2 = poteza[1];
+					okno.platno().poteza(prevedi(poteza1)[0], prevedi(poteza1)[1], okno.platno().igralec_na_potezi);
+					okno.platno().poteza(prevedi(poteza2)[0], prevedi(poteza2)[1], okno.platno().igralec_na_potezi);
 					okno.osvezi_vmesnik();
 					igramo();
 				}
@@ -90,13 +90,11 @@ public class Vodja {
 		};
 		worker.execute();
 		
-		
-		
 	
 	}
 		
-	public void igrajClovekovoPotezo(Koordinati poteza) {
-		if (igra.odigraj(poteza)) clovekNaVrsti = false;
+	public void igrajClovekovoPotezo(int[] poteza) { // metoda, s katero človek izvede potezo
+		igra.odigraj(poteza[0], poteza[1]);
 		okno.osvezi_vmesnik();
 		igramo();
 	}
@@ -105,7 +103,11 @@ public class Vodja {
 		return this.igra;
 	}
 	
-	public boolean clovekNaVrsti() {
-		return clovekNaVrsti;
+	
+	private int[] prevedi(int[] orig) { // prevede zapis izvedene poteze iz tipa za logiko v tip za vmesnik
+		int[] prevod = new int[2];
+		prevod[0] = (orig[0] == -1) ? 26 : 24 - orig[0];
+		prevod[1] = (orig[1] == 24) ? ((okno.platno().igralec_na_potezi) ? 25 : 0) : 24 - orig[1];
+		return prevod;
 	}
 }

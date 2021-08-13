@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import logika.Igra;
-import splosno.Koordinati;
 
-public class Drevo {
+public class Drevo { // razred, s katerim bomo predstavljali drevesa
 	
 	public Igra igra;
 	public int n; // število obiskov
@@ -14,9 +13,9 @@ public class Drevo {
 	public Drevo s; // starševsko drevo
 	public List<Drevo> sez_listov; // seznam vseh listov
 	public boolean je_obiskan = false;
-	public Koordinati k;
+	public int[] k;
 
-	public Drevo(Igra igra, Koordinati k, int n, int v, List<Drevo> sez_listov) {
+	public Drevo(Igra igra, int[] k, int n, int v, List<Drevo> sez_listov) {
 		this.n = n;
 		this.v = v;
 		this.sez_listov = sez_listov;
@@ -25,7 +24,7 @@ public class Drevo {
 	}
 	
 	public Drevo(Igra igra) { // koren
-		this(igra, new Koordinati(0, 0), 0, 0, new ArrayList<Drevo>());
+		this(igra, new int[] {69, 69}, 0, 0, new ArrayList<Drevo>());
 	}
 	
 	public boolean je_koren() {

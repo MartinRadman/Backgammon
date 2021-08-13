@@ -2,7 +2,7 @@ package logika;
 
 import logika.Zetoni.Polje;
 
-public class Igralec {
+public class Igralec { // razred s katerim predstavimo posameznega igralca
 	
 	protected String ime;
 	protected Polje id_igralca;
@@ -12,6 +12,13 @@ public class Igralec {
 	public Igralec(String ime, Polje id_igralca) {
 		this.ime = ime;
 		this.id_igralca = id_igralca;
+	}
+	
+	public Igralec(Igralec igralec) {
+		this(igralec.ime(), igralec.id());
+		
+		this.udarjeni_zetoni = igralec.udarjeni_zetoni;
+		this.izloceni_zetoni = igralec.izloceni_zetoni;
 	}
 	
 	public String ime() {

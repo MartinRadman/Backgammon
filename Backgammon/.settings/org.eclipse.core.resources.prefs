@@ -1,6 +1,9 @@
 eclipse.preferences.version=1
 encoding//src/Vmesnik/Okno.java=UTF-8
 encoding//src/Vmesnik/Platno.java=UTF-8
+encoding//src/inteligenca/MonteCarloTreeSearch.java=UTF-8
+encoding//src/logika/Igra.java=UTF-8
 encoding//src/logika/Igralec.java=UTF-8
 encoding//src/logika/Zetoni.java=UTF-8
+encoding//src/vodja/Vodja.java=UTF-8
 encoding//src/vodja/VrstaIgralca.java=UTF-8
