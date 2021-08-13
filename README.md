@@ -19,9 +19,9 @@ Kocko vržete tako, da pritisnete na gumb poleg kock, barva pa pove, kateri igra
 
 ![Med potezo](https://i.imgur.com/NC8uJIX.png)
 
-Ko igralec vrže kocko, se številke na kockah spremenjo. Nad njimi piše, kater met je že bil uporabljen, levo se gumb za met obarva zeleno (pomeni, da je igralec v fazi premikanja žetonov), še bolj levo pa se pojavi nov žeton v barvi igralca, ki je na potezi (če slušajno igralca izgubta delček pozornosti, veta kdo je na potezi). Desno od kock se pojavi puščica, ki kaže v katero smer igraec na potezi premika žetone.
+Ko igralec vrže kocko, se številke na kockah spremenjo. Nad njimi piše, kater met je že bil uporabljen, levo se gumb za met obarva zeleno (pomeni, da je igralec v fazi premikanja žetonov), še bolj levo pa se pojavi nov žeton v barvi igralca, ki je na potezi (če slušajno igralca izgubita delček pozornosti, veta kdo je na potezi). Desno od kock se pojavi puščica, ki kaže v katero smer igraec na potezi premika žetone.
 
-Žetone primate tako, da dvakrat pritisnete na žeton, ali na polje s katerega bi radi žeton premaknili. Ko je polje izbrano, se bo številka nad poljem obarvala v vaši barvi (na zgornji sliki je to polje 19, na vrsti je črni). Nato z enojnim klikom izberite polje, na katero želite žeton premakniti. V primeru, da je na enem polju več kot 5 žetonov, se bodo le-ti zložili v stolpič, zraven pa bo napisana njegova velikost _(slika zgoraj, polje 6)_.
+Žetone premikate tako, da dvakrat pritisnete na žeton, ali na polje s katerega bi radi žeton premaknili. Ko je polje izbrano, se bo številka nad poljem obarvala v vaši barvi _(na zgornji sliki je to polje 19, na vrsti je črni)_. Nato z enojnim klikom izberite polje, na katero želite žeton premakniti. V primeru, da je na enem polju več kot 5 žetonov, se bodo le-ti zložili v stolpič, zraven pa bo napisana njegova velikost _(slika zgoraj, polje 6)_.
 
 Ko porabite vse premike, bo aplikacija avtomatično ponudila met naslednjemu igralcu. 
 
