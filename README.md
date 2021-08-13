@@ -36,7 +36,7 @@ Vse kar morate storiti je, da v menijo v zgornjem levem kotu izberete *Prilagodi
 Odprlo se vam bo pomožno okno, kjer lahko na 5 različnih načinov izberete novo barvo. 
 
 ## Navodila za inštalacijo
-Prenesite vse datoteke. Nato pa 
+Prenesite vse datoteke. Nato pa sledite _Backgammon_ -> _src_ -> _Vmesnik_ , ter zaženite _launcher.java_.
 
 
 #### O projektu Backgammon
