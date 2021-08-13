@@ -6,30 +6,29 @@
 
 Pozdravljeni.
 
-Aplikacija Backgammon vam omogoča, da odigrate partijo igre Backgammon s prijateljem ali proti računalniku. 
-Pravila Backgammona sicer niso sila preprosa a tudi prav težka niso. Navodila najdete na tej povezavi: [Pravila](https://en.wikipedia.org/wiki/Backgammon#Rules)
+Aplikacija Backgammon vam omogoča, da odigrate partijo igre Backgammon s prijateljem ali proti računalniku (ali pa s samim seboj). 
+Pravila Backgammona sicer niso sila preprosa, a tudi prav težka niso. Najdete jih na tej povezavi: [Pravila](https://en.wikipedia.org/wiki/Backgammon#Rules)
 
 ### Delovanje
 
-Aplikacija je enostavna za uporabo. Navodila, kako jo naložiti se nahajajo v naslednjem oddelku. Ko jo enkrat zaženete se znajdete na meniju se prepustite samo še igranju. Če imate prijatelja (ali pa bi radi igrali s samim seboj) izberite *Nova igra*, če pa bi radi na dvoboj izzvai računalnik, pa izberite *Nova igra proti računalniku*.
+Aplikacija je enostavna za uporabo. Navodila, kako jo naložiti se nahajajo v naslednjem oddelku _(Navodila za inštalacijo)_. Ko jo enkrat zaženete in se znajdete na meniju se prepustite samo še igranju. Če imate prijatelja (ali pa bi radi igrali s samim seboj) izberite *Nova igra*, če pa bi radi na dvoboj izzvali računalnik, pa izberite *Nova igra proti računalniku*.
 
 ![Prva poteza](https://i.imgur.com/i4zRuBD.png)
 
-Kocko vržete tako, da pritisnete na gumb poleg kock, barva pa pove, kateri igralec je na vrsti za met. V primeru na sliki (gor) je na vrsti modri igralec.
+Kocko vržete tako, da pritisnete na gumb poleg kock, barva pa pove, kateri igralec je na vrsti za met. V primeru na sliki _(gor)_ je na vrsti modri igralec.
 
 ![Med potezo](https://i.imgur.com/NC8uJIX.png)
 
 Ko igralec vrže kocko, se številke na kockah spremenjo. Nad njimi piše, kater met je že bil uporabljen, levo se gumb za met obarva zeleno (pomeni, da je igralec v fazi premikanja žetonov), še bolj levo pa se pojavi nov žeton v barvi igralca, ki je na potezi (če slušajno igralca izgubta delček pozornosti, veta kdo je na potezi). Desno od kock se pojavi puščica, ki kaže v katero smer igraec na potezi premika žetone.
 
-Žetone primate tako, da dvakrat pritisnete na žeton, ali na polje s katerega bi radi žeton premaknili. Ko je polje izbrano, se bo številka nad poljem obarvala v vaši barvi (na zgornji sliki je to polje 19, na vrsti je črni). Nato z enojnim klikom izberite polje, na katero želite žeton premakniti. 
+Žetone primate tako, da dvakrat pritisnete na žeton, ali na polje s katerega bi radi žeton premaknili. Ko je polje izbrano, se bo številka nad poljem obarvala v vaši barvi (na zgornji sliki je to polje 19, na vrsti je črni). Nato z enojnim klikom izberite polje, na katero želite žeton premakniti. V primeru, da je na enem polju več kot 5 žetonov, se bodo le-ti zložili v stolpič, zraven pa bo napisana njegova velikost _(slika zgoraj, polje 6)_.
 
 Ko porabite vse premike, bo aplikacija avtomatično ponudila met naslednjemu igralcu. 
 
 V primeru, da za svoje mete ne morete narediti legalne poteze lahko kadarkoli ponovno pritisnete zelen gumb (gumb za met) in zaključili boste potezo, ter jo predali nasprotniku.
 
-Če hočete plošček odmakniti s plošče izberite rob na desni, vzporedno z vašo _hišo_ (glej sliko spodaj).
+Če hočete plošček odmakniti s plošče izberite rob na desni, vzporedno z vašo _hišo_ _(glej sliko spodaj)_. 
 ![Kratka navodila](https://i.imgur.com/tQAAooY.png)
-
 ### Izgled po meri
 Barvo igralcev lahko poljubno nastavite.
 Vse kar morate storiti je, da v menijo v zgornjem levem kotu izberete *Prilagoditve*. Nato pa si izberete barvo katerega igralca želite zamenjati.
